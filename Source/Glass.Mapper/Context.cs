@@ -114,6 +114,11 @@ namespace Glass.Mapper
         public IDependencyResolver DependencyResolver { get; set; }
 
         /// <summary>
+        /// The configuration for the Glass Cache
+        /// </summary>
+        public AbstractObjectCacheConfiguration ObjectCacheConfiguration { get; set; }
+
+        /// <summary>
         /// Prevents a default instance of the <see cref="Context"/> class from being created.
         /// </summary>
         private Context()

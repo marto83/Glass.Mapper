@@ -69,12 +69,9 @@ namespace Glass.Mapper.Pipelines.ObjectConstruction
             Service = service;
         }
 
-       
-
-     
-
-      
-
+        protected ObjectConstructionArgs() : base()
+        {
+        }
     }
 }
 

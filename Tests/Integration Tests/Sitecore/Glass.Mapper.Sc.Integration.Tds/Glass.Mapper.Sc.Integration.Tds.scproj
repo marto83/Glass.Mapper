@@ -37,6 +37,15 @@
     <OutputPath>.\Release\</OutputPath>
     <RecursiveDeployAction>Ignore</RecursiveDeployAction>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug - Aaron' ">
+    <DebugSymbols>true</DebugSymbols>
+    <RecursiveDeployAction>Ignore</RecursiveDeployAction>
+    <SitecoreDeployFolder>C:\Git\Glass.Mapper\feature\Caching\Sites\Sitecore\Glass.Mapper.Sites.Sc</SitecoreDeployFolder>
+    <SitecoreWebUrl>http://sitecore.glass.com</SitecoreWebUrl>
+    <SitecoreAccessGuid>fd21ce01-25b5-4388-a335-6211a7a211b9</SitecoreAccessGuid>
+    <InstallSitecoreConnector>True</InstallSitecoreConnector>
+    <OutputPath>.\Debug - Aaron\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <AssemblyAttributes Include="AssemblyFileVersion">
       <Value>$(AssemblyFileVersion)</Value>

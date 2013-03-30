@@ -49,6 +49,10 @@ namespace Glass.Mapper.Pipelines
             Context = context;
         }
 
+        protected AbstractPipelineArgs()
+        {
+        }
+
         /// <summary>
         /// Aborts the pipeline.
         /// </summary>
