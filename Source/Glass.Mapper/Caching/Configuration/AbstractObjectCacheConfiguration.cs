@@ -4,29 +4,32 @@ using System.Linq;
 using System.Text;
 using Glass.Mapper.Caching.ObjectCaching;
 
-namespace Glass.Mapper.Configuration
+namespace Glass.Mapper.Caching.Configuration
 {
     /// <summary>
-    /// The class that holds the information about the Glass Cache configuration
+    /// 
     /// </summary>
     public abstract class AbstractObjectCacheConfiguration
     {
+        /// <summary>
+        /// The 
+        /// </summary>
         public IAbstractObjectCache ObjectCache { get; set; }
 
         protected AbstractObjectCacheConfiguration()
-            : this(Context.Default)
+            : this(Context.Default.DependencyResolver)
         {
 
         }
 
         protected AbstractObjectCacheConfiguration(string contextName)
-            : this(Context.Contexts[contextName])
+            : this(Context.Contexts[contextName].DependencyResolver)
         {
         }
 
-        protected AbstractObjectCacheConfiguration(Context glassContext)
+        protected AbstractObjectCacheConfiguration(IDependencyResolver resolver)
         {
-            //ObjectCache = glassContext.DependencyResolver.TryResolve<IAbstractObjectCache>();
+            ObjectCache = resolver.Resolve<IAbstractObjectCache>();
         }
     }
 }

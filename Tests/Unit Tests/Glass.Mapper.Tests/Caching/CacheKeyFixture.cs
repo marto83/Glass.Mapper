@@ -23,6 +23,7 @@ namespace Glass.Mapper.Tests.Caching
         [Test]
         public void CanCreateCacheKey()
         {
+            //Assert
             Assert.AreEqual(_key.Database, Database);
             Assert.AreEqual(_key.Id, Id);
             Assert.AreEqual(_key.GetId(), Id);
@@ -33,7 +34,10 @@ namespace Glass.Mapper.Tests.Caching
         [Test]
         public void CanGetCacheKeyString()
         {
+            //Assign
             var keyStrng = "{0},{1},{2},{3}".Formatted(Id, RevisionId, Database, typeof(int));
+
+            //Assert
             Assert.AreEqual(keyStrng, _key.ToString());
         }
 
@@ -50,11 +54,13 @@ namespace Glass.Mapper.Tests.Caching
         [Test]
         public void AreKeyNotEqual()
         {
+            //Assign
             var key = Substitute.For<CacheKey<string>>(
                 Id.ToString(CultureInfo.InvariantCulture),
                 RevisionId.ToString(CultureInfo.InvariantCulture), 
                 Database);
 
+            //Assert
 // ReSharper disable SuspiciousTypeConversion.Global
             Assert.IsFalse(_key.Equals(key));
 // ReSharper restore SuspiciousTypeConversion.Global

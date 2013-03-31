@@ -24,5 +24,11 @@ namespace Glass.Mapper.Caching.ObjectCaching
         /// <param name="args">The arguments for the request</param>
         /// <returns>the object from Cache</returns>
         object GetObject(ObjectCachingArgs args);
+
+        /// <summary>
+        /// Adds and object to the Cache
+        /// </summary>
+        /// <param name="args">The arguments for the request</param>
+        void AddObject(ObjectCachingArgs args);
     }
 }

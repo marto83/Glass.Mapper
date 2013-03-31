@@ -39,13 +39,17 @@ namespace Glass.Mapper.Tests.Caching
         [Test]
         public void ObjectCachingArgsIsInstanceOfObjectConstructionArgs()
         {
+            //Assert
             Assert.IsInstanceOf<ObjectConstructionArgs>(new ObjectCachingArgs(_context, _abstractTypeCreationContext, _configuration, _service));
         }
         [Test]
         public void CanSetCacheKeyFromCrounstrocter()
         {
+            //Assign
             var cacheKey = Substitute.For<CacheKey<int>>();
+            //Act
             var args = new ObjectCachingArgs(_context, _abstractTypeCreationContext, _configuration, _service, cacheKey);
+            //Assert
             Assert.AreSame(args.CacheKey, cacheKey);
         }
     }

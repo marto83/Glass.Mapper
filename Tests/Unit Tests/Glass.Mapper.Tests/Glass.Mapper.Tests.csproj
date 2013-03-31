@@ -45,6 +45,9 @@
     <Reference Include="Castle.Core">
       <HintPath>..\..\..\packages\Castle.Core.3.2.0\lib\net40-client\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\..\..\Source\Glass.Mapper.Sc.CastleWindsor\bin\Debug - Aaron\Castle.Windsor.dll</HintPath>
+    </Reference>
     <Reference Include="NSubstitute, Version=1.5.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\NSubstitute.1.5.0.0\lib\NET40\NSubstitute.dll</HintPath>
@@ -64,6 +67,8 @@
   <ItemGroup>
     <Compile Include="AbstractServiceFixture.cs" />
     <Compile Include="Caching\CacheKeyFixture.cs" />
+    <Compile Include="Caching\Configuration\AbstractObjectCacheConfigurationFixture.cs" />
+    <Compile Include="Caching\Configuration\ContextFixture.cs" />
     <Compile Include="Caching\ObjectCachingArgsFixture.cs" />
     <Compile Include="Caching\ObjectCaching\AbstractObjectCacheFixture.cs" />
     <Compile Include="Configuration\AbstractTypeConfigurationFixture.cs" />
@@ -85,6 +90,7 @@
     <Compile Include="Pipelines\ObjectConstruction\Tasks\CreateConcrete\LazyObjectInterceptorFixture.cs" />
     <Compile Include="Pipelines\ObjectConstruction\Tasks\CreateInterface\CreateInterfaceTaskFixture.cs" />
     <Compile Include="Pipelines\ObjectConstruction\Tasks\ObjectCachingResolver\ObjectCachingResolverTaskFixture.cs" />
+    <Compile Include="Pipelines\ObjectConstruction\Tasks\ObjectCachingSaver\ObjectCachingSaverTaskFixture.cs" />
     <Compile Include="Pipelines\ObjectSaving\Tasks\StandardSavingTaskFixture.cs" />
     <Compile Include="UtilitiesFixture.cs" />
     <Compile Include="Pipelines\AbstractPipelineRunnerFixture.cs" />

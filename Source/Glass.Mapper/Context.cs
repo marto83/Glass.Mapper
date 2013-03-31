@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Glass.Mapper.Caching.Configuration;
 using Glass.Mapper.Configuration;
 using Glass.Mapper.Pipelines.DataMapperResolver;
 
@@ -117,6 +118,8 @@ namespace Glass.Mapper
         /// The configuration for the Glass Cache
         /// </summary>
         public AbstractObjectCacheConfiguration ObjectCacheConfiguration { get; set; }
+
+
 
         /// <summary>
         /// Prevents a default instance of the <see cref="Context"/> class from being created.
@@ -227,6 +230,24 @@ namespace Glass.Mapper
                 config = TypeConfigurations.ContainsKey(interfaceType) ? TypeConfigurations[interfaceType] : null;
 
             return config;
+        }
+
+        /// <summary>
+        /// Configures the Cache via dependency injection
+        /// </summary>
+        public void ConfigureCache()
+        {
+            ObjectCacheConfiguration =
+                DependencyResolver.Resolve<AbstractObjectCacheConfiguration>();
+        }
+
+        /// <summary>
+        /// Manually sets the the Cache Configuration
+        /// </summary>
+        /// <param name="objectCacheConfiguration"></param>
+        public void ConfigureCache(AbstractObjectCacheConfiguration objectCacheConfiguration)
+        {
+            ObjectCacheConfiguration = objectCacheConfiguration;
         }
     }
 }

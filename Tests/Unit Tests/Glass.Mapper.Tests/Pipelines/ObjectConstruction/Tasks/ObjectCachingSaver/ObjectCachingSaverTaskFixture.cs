@@ -7,14 +7,15 @@ using Glass.Mapper.Caching.ObjectCaching;
 using Glass.Mapper.Configuration;
 using Glass.Mapper.Pipelines;
 using Glass.Mapper.Pipelines.ObjectConstruction;
+using Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingResolver;
+using Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingSaver;
 using NSubstitute;
 using NUnit.Framework;
-using Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingResolver;
 
-namespace Glass.Mapper.Tests.Pipelines.ObjectConstruction.Tasks.ObjectCachingResolver
+namespace Glass.Mapper.Tests.Pipelines.ObjectConstruction.Tasks.ObjectCachingSaver
 {
     [TestFixture]
-    public class ObjectCachingResolverTaskFixture
+    public class ObjectCachingSaverTaskFixture
     {
         private IPipelineTask<ObjectCachingArgs> _task;
         private Context _context;
@@ -26,10 +27,10 @@ namespace Glass.Mapper.Tests.Pipelines.ObjectConstruction.Tasks.ObjectCachingRes
         [SetUp]
         public void Setup()
         {
-            _task = new ObjectCachingResolverTask();
+            _task = new ObjectCachingSaverTask();
 
             //Assign
-            _type = typeof(StubClass);
+            _type = typeof(ObjectCachingResolver.StubClass);
             _service = Substitute.For<IAbstractService>();
 
             _context = Context.Create(Substitute.For<IDependencyResolver>());
@@ -43,7 +44,6 @@ namespace Glass.Mapper.Tests.Pipelines.ObjectConstruction.Tasks.ObjectCachingRes
             _configuration.Type = _type;
         }
 
-        #region Method - Execute
         [Test]
         public void CanTaskExecute()
         {
@@ -52,32 +52,27 @@ namespace Glass.Mapper.Tests.Pipelines.ObjectConstruction.Tasks.ObjectCachingRes
         }
 
         [Test]
-        public void CanTastExecuteAndAbortTask()
+        public void CanTastExecuteAndDoesNotAbortTask()
         {
             var args = new ObjectCachingArgs(_context, _abstractTypeCreationContext, _configuration, _service);
 
             _context.ObjectCacheConfiguration.ObjectCache.ContansObject(args).Returns(true);
             _task.Execute(args);
 
-            Assert.IsTrue(args.IsAborted);
+            Assert.IsFalse(args.IsAborted);
         }
 
         [Test]
-        public void CanTastExecuteAndReturnsObjectFromCache()
+        public void CanTastExecuteAndAddObjectToCache()
         {
             var stubClass = new StubClass();
 
             var args = new ObjectCachingArgs(_context, _abstractTypeCreationContext, _configuration, _service);
-
-            _context.ObjectCacheConfiguration.ObjectCache.GetObject(args).Returns(stubClass);
-            _context.ObjectCacheConfiguration.ObjectCache.ContansObject(args).Returns(true);
-
+            args.Result = stubClass;
             _task.Execute(args);
 
-            Assert.AreEqual(stubClass, args.Result);
+            _context.ObjectCacheConfiguration.ObjectCache.Received().AddObject(args);
         }
-
-        #endregion
     }
 
     #region Stubs
