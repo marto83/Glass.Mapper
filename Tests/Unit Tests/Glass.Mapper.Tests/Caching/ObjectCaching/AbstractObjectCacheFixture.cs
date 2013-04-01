@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections;
 using Glass.Mapper.Caching;
 using Glass.Mapper.Caching.Exceptions;
 using Glass.Mapper.Caching.ObjectCaching;
@@ -32,11 +28,12 @@ namespace Glass.Mapper.Tests.Caching.ObjectCaching
             _args.Result = _stubObject;
             
             _cacheKeyResolver = Substitute.For<AbstractCacheKeyResolver<int>>();
-            _key = Substitute.For<CacheKey<int>>(42, RevisionId, Database);
+            _key = Substitute.For<CacheKey<int>>(Id, RevisionId, Database);
 
             _args.CacheKey = _key;
             _cacheKeyResolver.GetKey(_args).Returns(_key);
         }
+
         [Test]
         public void AbstractObjectCacheContainObject()
         {
@@ -89,6 +86,7 @@ namespace Glass.Mapper.Tests.Caching.ObjectCaching
             : base(cacheKeyResolver)
         {
         }
+
         protected override bool InternalContansObject(string objectKey)
         {
             return _table.ContainsKey(objectKey);

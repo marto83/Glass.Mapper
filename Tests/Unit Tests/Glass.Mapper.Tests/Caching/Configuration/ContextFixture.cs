@@ -15,18 +15,56 @@ namespace Glass.Mapper.Tests.Caching.Configuration
     [TestFixture]
     public class ContextFixture
     {
+        private ContextFixtureIDependencyResolver _contextFixtureIDependencyResolver;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _contextFixtureIDependencyResolver = new ContextFixtureIDependencyResolver();
+        }
+
         [Test]
         public void CanConfigureCache()
-        {
-            //create the resolver
-            var resolver = new ContextFixtureIDependencyResolver();
-            
+        {           
             //create a context
-            var context = Context.Create(resolver);
+            var context = Context.Create(_contextFixtureIDependencyResolver);
             context.ConfigureCache();
 
             Assert.IsNotNull(context.ObjectCacheConfiguration);
         }
+
+        [Test]
+        public void CanConfigureCacheManuley()
+        {
+            //create a context
+            var context = Context.Create(_contextFixtureIDependencyResolver);
+            context.ConfigureCache(new ContextFixtureAbstractObjectCacheConfiguration());
+
+            Assert.IsNotNull(context.ObjectCacheConfiguration);
+        }
+    }
+    public class ContextFixtureIAbstractObjectCache:IAbstractObjectCache
+    {
+
+        public bool ContansObject(Mapper.Pipelines.ObjectConstruction.ObjectCachingArgs args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object GetObject(Mapper.Pipelines.ObjectConstruction.ObjectCachingArgs args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddObject(Mapper.Pipelines.ObjectConstruction.ObjectCachingArgs args)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ContextFixtureAbstractObjectCacheConfiguration:AbstractObjectCacheConfiguration
+    {
+        
     }
 
     public class ContextFixtureIDependencyResolver : IDependencyResolver
@@ -37,8 +75,8 @@ namespace Glass.Mapper.Tests.Caching.Configuration
         {
             container = new WindsorContainer();
             container.Register(
-                Component.For<IAbstractObjectCache>().ImplementedBy<IAbstractObjectCache>().LifestyleTransient(),
-                Component.For<AbstractObjectCacheConfiguration>().ImplementedBy<AbstractObjectCacheConfiguration>().LifestyleTransient());
+                Component.For<IAbstractObjectCache>().ImplementedBy<ContextFixtureIAbstractObjectCache>().LifestyleTransient(),
+                Component.For<AbstractObjectCacheConfiguration>().ImplementedBy<ContextFixtureAbstractObjectCacheConfiguration>().LifestyleTransient());
         }
 
         /// <summary>

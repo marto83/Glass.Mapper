@@ -47,5 +47,6 @@ namespace Glass.Mapper.Caching.ObjectCaching
         {
             CacheKeyResolver = cacheKeyResolver;
         }
+
     }
 }

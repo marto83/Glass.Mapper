@@ -1,33 +1,33 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Glass.Mapper.Caching.Configuration;
 using Glass.Mapper.Caching.ObjectCaching;
+using Glass.Mapper.Sc.Caching.Configuration;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace Glass.Mapper.Tests.Caching.Configuration
+namespace Glass.Mapper.Sc.Tests.Caching.Configuration
 {
     [TestFixture]
-    public class AbstractObjectCacheConfigurationFixture
+    public class SitecoreObjectCacheConfigurationFixture
     {
         private StubIDependencyResolver stubIDependencyResolver;
-        
+
         [SetUp]
         public void SetUp()
         {
             IWindsorContainer container = new WindsorContainer();
             container.Register(
                 Component.For<AbstractObjectCacheConfiguration>()
-                         .ImplementedBy<StubAbstractObjectCacheConfiguration>()
+                         .ImplementedBy<SitecoreObjectCacheConfiguration>()
                          .LifestyleTransient(),
                 Component.For<IAbstractObjectCache>()
                          .ImplementedBy<StubAbstractObjectCache>()
                          .LifestyleTransient()
-
                 );
 
             stubIDependencyResolver = new StubIDependencyResolver(container);
@@ -38,7 +38,7 @@ namespace Glass.Mapper.Tests.Caching.Configuration
         [Test]
         public void CanCreateAbstractObjectCacheConfiguration()
         {
-            var objectCacheConfiguration = new StubAbstractObjectCacheConfiguration();
+            var objectCacheConfiguration = new SitecoreObjectCacheConfiguration();
 
             Assert.IsNotNull(objectCacheConfiguration.ObjectCache);
         }
@@ -46,7 +46,7 @@ namespace Glass.Mapper.Tests.Caching.Configuration
         [Test]
         public void CanCreateAbstractObjectCacheConfigurationByName()
         {
-            var objectCacheConfiguration = new StubAbstractObjectCacheConfiguration("Default");
+            var objectCacheConfiguration = new SitecoreObjectCacheConfiguration("Default");
 
             Assert.IsNotNull(objectCacheConfiguration.ObjectCache);
         }
@@ -54,28 +54,11 @@ namespace Glass.Mapper.Tests.Caching.Configuration
         [Test]
         public void CanCreateAbstractObjectCacheConfigurationByResolver()
         {
-            var objectCacheConfiguration = new StubAbstractObjectCacheConfiguration(stubIDependencyResolver);
+            var objectCacheConfiguration = new SitecoreObjectCacheConfiguration(stubIDependencyResolver);
 
             Assert.IsNotNull(objectCacheConfiguration.ObjectCache);
         }
-    }
 
-    public class StubAbstractObjectCacheConfiguration : AbstractObjectCacheConfiguration
-    {
-        public StubAbstractObjectCacheConfiguration()
-            : base()
-        {
-        }
-
-        public StubAbstractObjectCacheConfiguration(string contextName)
-            : base(contextName)
-        {
-        }
-
-        public StubAbstractObjectCacheConfiguration(IDependencyResolver resolver)
-            : base(resolver)
-        {
-        }
     }
 
     public class StubAbstractObjectCache : IAbstractObjectCache
