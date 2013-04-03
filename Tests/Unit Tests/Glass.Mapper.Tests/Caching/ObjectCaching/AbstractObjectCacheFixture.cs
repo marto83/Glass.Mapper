@@ -2,6 +2,7 @@
 using Glass.Mapper.Caching;
 using Glass.Mapper.Caching.Exceptions;
 using Glass.Mapper.Caching.ObjectCaching;
+using Glass.Mapper.Configuration;
 using Glass.Mapper.Pipelines.ObjectConstruction;
 using NSubstitute;
 using NUnit.Framework;
@@ -83,7 +84,7 @@ namespace Glass.Mapper.Tests.Caching.ObjectCaching
         private volatile Hashtable _table = new Hashtable();
 
         public StubAbstractObjectCache(AbstractCacheKeyResolver<int> cacheKeyResolver)
-            : base(cacheKeyResolver)
+            : base(cacheKeyResolver, new GlassConfiguration())
         {
         }
 

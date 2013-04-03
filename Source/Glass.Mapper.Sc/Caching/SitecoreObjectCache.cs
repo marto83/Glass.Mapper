@@ -4,6 +4,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Glass.Mapper.Caching.ObjectCaching;
+using Glass.Mapper.Configuration;
+using Glass.Mapper.Sc.Configuration;
 using Sitecore.Caching;
 using Sitecore.Data;
 
@@ -14,22 +16,14 @@ namespace Glass.Mapper.Sc.Caching
         private readonly Cache _objectCache;
         private readonly TimeSpan _cacheItemSlidingExpiration;
 
-        public SitecoreObjectCache(AbstractCacheKeyResolver<ID> cacheKeyResolver)
-            : base(cacheKeyResolver)
+        public SitecoreObjectCache(AbstractCacheKeyResolver<ID> cacheKeyResolver, SitecoreGlassConfiguration glassConfiguration)
+            : base(cacheKeyResolver, glassConfiguration)
         {
-            _objectCache = Cache.GetNamedInstance("Glass.Mapper.Sc.Caching", GetCacheSize());
+            _objectCache = Cache.GetNamedInstance(GlassConfiguration.CacheName, glassConfiguration.CacheSize);
 
             _cacheItemSlidingExpiration = System.Web.Caching.Cache.NoSlidingExpiration;
         }
 
-        private static long GetCacheSize()
-        {
-            return Sitecore.StringUtil.ParseSizeString(
-                Sitecore.Configuration.Settings.GetSetting(
-                    "Glass.Mapper.Sc.Caching.CacheSize", "100MB"
-                    )
-                );
-        }
 
         protected override bool InternalContansObject(string objectKey)
         {

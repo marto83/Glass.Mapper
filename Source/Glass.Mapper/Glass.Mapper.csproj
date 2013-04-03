@@ -54,6 +54,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -74,6 +75,7 @@
     <Compile Include="Caching\ObjectCaching\AbstractCacheKeyResolver.cs" />
     <Compile Include="Caching\ObjectCaching\AbstractObjectCache.cs" />
     <Compile Include="Caching\ObjectCaching\IAbstractObjectCache.cs" />
+    <Compile Include="Caching\ObjectCaching\MemoryObjectCache.cs" />
     <Compile Include="Configuration\AbstractTypeConfiguration.cs" />
     <Compile Include="Configuration\AbstractPropertyConfiguration.cs" />
     <Compile Include="Configuration\Attributes\AttributeConfigurationLoader.cs" />
@@ -90,8 +92,10 @@
     <Compile Include="Configuration\ChildrenConfiguration.cs" />
     <Compile Include="Configuration\ConfigurationException.cs" />
     <Compile Include="Configuration\FieldConfiguration.cs" />
+    <Compile Include="Configuration\GlassConfiguration.cs" />
     <Compile Include="Configuration\IConfigurationLoader.cs" />
     <Compile Include="Configuration\IdConfiguration.cs" />
+    <Compile Include="Configuration\IGlassConfigurationFactory.cs" />
     <Compile Include="Configuration\InfoConfiguration.cs" />
     <Compile Include="Configuration\LinkedConfiguration.cs" />
     <Compile Include="Configuration\NodeConfiguration.cs" />

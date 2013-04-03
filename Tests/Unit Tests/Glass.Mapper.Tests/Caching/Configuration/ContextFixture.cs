@@ -7,6 +7,7 @@ using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Glass.Mapper.Caching.Configuration;
 using Glass.Mapper.Caching.ObjectCaching;
+using Glass.Mapper.Configuration;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -34,6 +35,15 @@ namespace Glass.Mapper.Tests.Caching.Configuration
         }
 
         [Test]
+        public void CanConfigureCacheViaProperty()
+        {
+            //create a context
+            var context = Context.Create(_contextFixtureIDependencyResolver);
+
+            Assert.IsNotNull(context.ObjectCacheConfiguration);
+        }
+
+        [Test]
         public void CanConfigureCacheManuley()
         {
             //create a context
@@ -42,6 +52,33 @@ namespace Glass.Mapper.Tests.Caching.Configuration
 
             Assert.IsNotNull(context.ObjectCacheConfiguration);
         }
+
+        [Test]
+        public void Load_LoadContextWithTypeConfigs_CanGetTypeConfigsFromContext()
+        {
+            //Assign
+            var loader1 = Substitute.For<IConfigurationLoader>();
+            var config1 = Substitute.For<AbstractTypeConfiguration>();
+            config1.Type = typeof(StubClass1);
+            loader1.Load().Returns(new[] { config1 });
+
+            var loader2 = Substitute.For<IConfigurationLoader>();
+            var config2 = Substitute.For<AbstractTypeConfiguration>();
+            config2.Type = typeof(StubClass2);
+            loader2.Load().Returns(new[] { config2 });
+
+            //Act
+            var context = Context.Create(Substitute.For<IDependencyResolver>());
+            context.Load(loader1, loader2);
+            context.ConfigureCache(new ContextFixtureAbstractObjectCacheConfiguration());
+
+            //Assert
+            Assert.IsNotNull(Context.Default);
+            Assert.AreEqual(Context.Contexts[Context.DefaultContextName], Context.Default);
+            Assert.AreEqual(config1, Context.Default.TypeConfigurations[config1.Type]);
+            Assert.AreEqual(config2, Context.Default.TypeConfigurations[config2.Type]);
+        }
+
     }
     public class ContextFixtureIAbstractObjectCache:IAbstractObjectCache
     {
@@ -103,5 +140,15 @@ namespace Glass.Mapper.Tests.Caching.Configuration
         {
             return container.ResolveAll<T>();
         }
+    }
+
+    public class StubClass1
+    {
+
+    }
+
+    public class StubClass2
+    {
+
     }
 }

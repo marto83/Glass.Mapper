@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Glass.Mapper.Caching.Configuration;
 using Glass.Mapper.Caching.ObjectCaching;
 using Glass.Mapper.Configuration;
 using Glass.Mapper.Pipelines;
 using Glass.Mapper.Pipelines.ObjectConstruction;
-using Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingResolver;
 using Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingSaver;
 using NSubstitute;
 using NUnit.Framework;
@@ -34,7 +30,7 @@ namespace Glass.Mapper.Tests.Pipelines.ObjectConstruction.Tasks.ObjectCachingSav
             _service = Substitute.For<IAbstractService>();
 
             _context = Context.Create(Substitute.For<IDependencyResolver>());
-            _context.ObjectCacheConfiguration = Substitute.For<AbstractObjectCacheConfiguration>();
+            _context.ConfigureCache(Substitute.For<AbstractObjectCacheConfiguration>());
             _context.ObjectCacheConfiguration.ObjectCache = Substitute.For<IAbstractObjectCache>();
 
             _abstractTypeCreationContext = Substitute.For<AbstractTypeCreationContext>();

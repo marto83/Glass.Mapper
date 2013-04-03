@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Glass.Mapper.Caching.Exceptions;
+using Glass.Mapper.Configuration;
 
 namespace Glass.Mapper.Caching.ObjectCaching
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public abstract class AbstractObjectCache<TIdType> : IAbstractObjectCache
     {
         protected AbstractCacheKeyResolver<TIdType> CacheKeyResolver;
+        protected GlassConfiguration GlassConfiguration;
 
         protected abstract bool InternalContansObject(string objectKey);
         protected abstract void InternalAddObject(string objectKey, object objectForCaching);
@@ -39,13 +38,10 @@ namespace Glass.Mapper.Caching.ObjectCaching
             InternalAddObject(objectKey, args.Result);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cacheKeyResolver"></param>
-        protected AbstractObjectCache(AbstractCacheKeyResolver<TIdType> cacheKeyResolver)
+        protected AbstractObjectCache(AbstractCacheKeyResolver<TIdType> cacheKeyResolver, GlassConfiguration glassConfiguration)
         {
             CacheKeyResolver = cacheKeyResolver;
+            GlassConfiguration = glassConfiguration;
         }
 
     }

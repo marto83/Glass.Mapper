@@ -5,6 +5,7 @@ using System.Text;
 using Glass.Mapper.Caching;
 using Glass.Mapper.Caching.Exceptions;
 using Glass.Mapper.Caching.ObjectCaching;
+using Glass.Mapper.Configuration;
 using Glass.Mapper.Pipelines.ObjectConstruction;
 using NSubstitute;
 using NUnit.Framework;
@@ -16,11 +17,12 @@ namespace Glass.Mapper.Tests.Caching.ObjectCaching
     {
         private AbstractCacheKeyResolver<int> _cacheKeyResolver;
         private const string Database = "SomeDatabase";
-
+        private GlassConfiguration _glassConfiguration;
         [SetUp]
         public void SetUp()
         {
             _cacheKeyResolver = Substitute.For<AbstractCacheKeyResolver<int>>();
+            _glassConfiguration = new GlassConfiguration();
         }
 
         [Test]
@@ -39,7 +41,7 @@ namespace Glass.Mapper.Tests.Caching.ObjectCaching
 
 
             //Assign
-            var abstractObjectCache = new MemoryObjectCache<int>(_cacheKeyResolver);
+            var abstractObjectCache = new MemoryObjectCache<int>(_cacheKeyResolver, _glassConfiguration);
 
             //Act
             abstractObjectCache.AddObject(args);
@@ -64,7 +66,7 @@ namespace Glass.Mapper.Tests.Caching.ObjectCaching
 
             _cacheKeyResolver.GetKey(args).Returns(key);
 
-            var abstractObjectCache = new MemoryObjectCache<int>(_cacheKeyResolver);
+            var abstractObjectCache = new MemoryObjectCache<int>(_cacheKeyResolver, _glassConfiguration);
             abstractObjectCache.AddObject(args);
             _cacheKeyResolver.GetKey(args).Returns(key);
             args.CacheKey = key;
@@ -81,7 +83,7 @@ namespace Glass.Mapper.Tests.Caching.ObjectCaching
         public void ExpectWhenTryToAddObjectAgain()
         {
             //Assign
-            var abstractObjectCache = new MemoryObjectCache<int>(_cacheKeyResolver);
+            var abstractObjectCache = new MemoryObjectCache<int>(_cacheKeyResolver, _glassConfiguration);
 
             var id = 3;
             var revisionId = 3;

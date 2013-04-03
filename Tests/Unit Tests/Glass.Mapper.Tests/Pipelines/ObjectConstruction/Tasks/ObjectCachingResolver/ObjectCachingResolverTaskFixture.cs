@@ -33,7 +33,7 @@ namespace Glass.Mapper.Tests.Pipelines.ObjectConstruction.Tasks.ObjectCachingRes
             _service = Substitute.For<IAbstractService>();
 
             _context = Context.Create(Substitute.For<IDependencyResolver>());
-            _context.ObjectCacheConfiguration = Substitute.For<AbstractObjectCacheConfiguration>();
+            _context.ConfigureCache(Substitute.For<AbstractObjectCacheConfiguration>());
             _context.ObjectCacheConfiguration.ObjectCache = Substitute.For<IAbstractObjectCache>();
 
             _abstractTypeCreationContext = Substitute.For<AbstractTypeCreationContext>();

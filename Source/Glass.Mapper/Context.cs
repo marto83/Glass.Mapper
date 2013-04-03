@@ -115,9 +115,28 @@ namespace Glass.Mapper
         public IDependencyResolver DependencyResolver { get; set; }
 
         /// <summary>
+        /// Configuration for the instance of thie glass context
+        /// </summary>
+        public GlassConfiguration Configuration { get; set; }
+
+
+        private AbstractObjectCacheConfiguration _objectCacheConfiguration;
+
+        /// <summary>
         /// The configuration for the Glass Cache
         /// </summary>
-        public AbstractObjectCacheConfiguration ObjectCacheConfiguration { get; set; }
+        public AbstractObjectCacheConfiguration ObjectCacheConfiguration
+        {
+            get
+            {
+                if (_objectCacheConfiguration == null)
+                {
+                    ConfigureCache();
+                }
+
+                return _objectCacheConfiguration;
+            }
+        }
 
 
 
@@ -155,9 +174,6 @@ namespace Glass.Mapper
             {
                 var typeConfigurations = loaders
                     .Select(loader => loader.Load()).Aggregate((x, y) => x.Union(y));
-
-                
-                
 
                 //first we have to add each type config to the collection
                 foreach (var typeConfig in typeConfigurations)
@@ -237,7 +253,7 @@ namespace Glass.Mapper
         /// </summary>
         public void ConfigureCache()
         {
-            ObjectCacheConfiguration =
+            _objectCacheConfiguration =
                 DependencyResolver.Resolve<AbstractObjectCacheConfiguration>();
         }
 
@@ -247,7 +263,7 @@ namespace Glass.Mapper
         /// <param name="objectCacheConfiguration"></param>
         public void ConfigureCache(AbstractObjectCacheConfiguration objectCacheConfiguration)
         {
-            ObjectCacheConfiguration = objectCacheConfiguration;
+            _objectCacheConfiguration = objectCacheConfiguration;
         }
     }
 }

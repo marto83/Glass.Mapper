@@ -71,6 +71,7 @@
     <Compile Include="Caching\Configuration\ContextFixture.cs" />
     <Compile Include="Caching\ObjectCachingArgsFixture.cs" />
     <Compile Include="Caching\ObjectCaching\AbstractObjectCacheFixture.cs" />
+    <Compile Include="Caching\ObjectCaching\MemoryObjectCacheFixture.cs" />
     <Compile Include="Configuration\AbstractTypeConfigurationFixture.cs" />
     <Compile Include="Configuration\Attributes\AttributeConfigurationLoaderFixture.cs" />
     <Compile Include="Configuration\Attributes\AbstractClassAttributeFixture.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Configuration\Attributes\ParentAttributeFixture.cs" />
     <Compile Include="Configuration\Attributes\QueryAttributeFixture.cs" />
     <Compile Include="AbstractDataMapperFixture.cs" />
+    <Compile Include="Configuration\GlassConfigurationFactoryFixture.cs" />
     <Compile Include="ContextFixture.cs" />
     <Compile Include="ExtensionMethodFixture.cs" />
     <Compile Include="Pipelines\ConfigurationResolver\Tasks\StandardResolver\ConfigurationStandardResolverTaskFixture.cs" />

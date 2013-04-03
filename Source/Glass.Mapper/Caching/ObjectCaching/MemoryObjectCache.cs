@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
 using System.Text;
+using Glass.Mapper.Configuration;
 
 namespace Glass.Mapper.Caching.ObjectCaching
 {
@@ -10,14 +11,10 @@ namespace Glass.Mapper.Caching.ObjectCaching
     {
         private volatile MemoryCache _objectCache;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cacheKeyResolver"></param>
-        public MemoryObjectCache(AbstractCacheKeyResolver<TIdType> cacheKeyResolver)
-            : base(cacheKeyResolver)
+        public MemoryObjectCache(AbstractCacheKeyResolver<TIdType> cacheKeyResolver, GlassConfiguration glassConfiguration)
+            : base(cacheKeyResolver, glassConfiguration)
         {
-            _objectCache = new MemoryCache("Glass.Mapper.Caching.ObjectCaching");
+            _objectCache = new MemoryCache(GlassConfiguration.CacheName);
         }
 
         protected override bool InternalContansObject(string objectKey)

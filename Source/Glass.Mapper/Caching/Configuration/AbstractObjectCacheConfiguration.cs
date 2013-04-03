@@ -12,7 +12,7 @@ namespace Glass.Mapper.Caching.Configuration
     public abstract class AbstractObjectCacheConfiguration
     {
         /// <summary>
-        /// The 
+        /// The Object Cache for Glass
         /// </summary>
         public IAbstractObjectCache ObjectCache { get; set; }
 
