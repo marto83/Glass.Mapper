@@ -78,6 +78,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caching\SitecoreCachingFixture.cs" />
     <Compile Include="CodeFirst\GlassDataProviderFixture.cs" />
     <Compile Include="Configuation\Fluent\FluentGeneralFixture.cs" />
     <Compile Include="Configuation\SitecoreGlassConfigurationFactoryFixture.cs" />
@@ -253,9 +254,7 @@
       <Name>Glass.Mapper</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Caching\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">
   </Target>

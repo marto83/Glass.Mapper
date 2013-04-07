@@ -16,7 +16,7 @@ namespace Glass.Mapper.Tests.Pipelines.ObjectConstruction.Tasks.ObjectCachingRes
     [TestFixture]
     public class ObjectCachingResolverTaskFixture
     {
-        private IPipelineTask<ObjectCachingArgs> _task;
+        private IPipelineTask<ObjectConstructionArgs> _task;
         private Context _context;
         private AbstractTypeCreationContext _abstractTypeCreationContext;
         private Type _type;
@@ -44,6 +44,7 @@ namespace Glass.Mapper.Tests.Pipelines.ObjectConstruction.Tasks.ObjectCachingRes
         }
 
         #region Method - Execute
+
         [Test]
         public void CanTaskExecute()
         {
@@ -75,6 +76,14 @@ namespace Glass.Mapper.Tests.Pipelines.ObjectConstruction.Tasks.ObjectCachingRes
             _task.Execute(args);
 
             Assert.AreEqual(stubClass, args.Result);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ObjectConstructionException))]
+        public void CanNotPassObjectConstructionArgsToObjectCachingSaverTaskExecute()
+        {
+            var args = new ObjectConstructionArgs(_context, _abstractTypeCreationContext, _configuration, _service);
+            _task.Execute(args);
         }
 
         #endregion

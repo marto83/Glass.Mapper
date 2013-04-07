@@ -13,7 +13,7 @@ namespace Glass.Mapper.Tests.Pipelines.ObjectConstruction.Tasks.ObjectCachingSav
     [TestFixture]
     public class ObjectCachingSaverTaskFixture
     {
-        private IPipelineTask<ObjectCachingArgs> _task;
+        private IPipelineTask<ObjectConstructionArgs> _task;
         private Context _context;
         private AbstractTypeCreationContext _abstractTypeCreationContext;
         private Type _type;
@@ -68,6 +68,14 @@ namespace Glass.Mapper.Tests.Pipelines.ObjectConstruction.Tasks.ObjectCachingSav
             _task.Execute(args);
 
             _context.ObjectCacheConfiguration.ObjectCache.Received().AddObject(args);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ObjectConstructionException))]
+        public void CanNotPassObjectConstructionArgsToObjectCachingSaverTaskExecute()
+        {
+            var args = new ObjectConstructionArgs(_context, _abstractTypeCreationContext, _configuration, _service);
+            _task.Execute(args);
         }
     }
 

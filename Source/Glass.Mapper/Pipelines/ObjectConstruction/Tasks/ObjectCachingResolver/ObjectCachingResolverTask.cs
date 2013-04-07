@@ -26,9 +26,9 @@ namespace Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingResolver
     /// <summary>
     /// Checks the Cache for requested object
     /// </summary>
-    public class ObjectCachingResolverTask : IPipelineTask<ObjectCachingArgs>
+    public class ObjectCachingResolverTask : ObjectCachingTask
     {
-        public void Execute(ObjectCachingArgs args)
+        public override void Execute(ObjectCachingArgs args)
         {
             if (!args.Context.ObjectCacheConfiguration.ObjectCache.ContansObject(args)) return;
 

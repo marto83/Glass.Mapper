@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Castle.MicroKernel.Registration;
 using Glass.Mapper.Configuration;
 using Glass.Mapper.Pipelines.ObjectConstruction;
+using Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingResolver;
+using Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingSaver;
 using Glass.Mapper.Sc.CastleWindsor.Pipelines.ObjectConstruction;
 using NSubstitute;
 using NUnit.Framework;
@@ -163,6 +165,16 @@ namespace Glass.Mapper.Sc.CastleWindsor.Tests.Pipelines.ObjectConstruction
             Assert.IsNull(args.Result);
 
 
+        }
+
+        [Test]
+        public void Can_Cretae_CreateCachingResolver()
+        {
+            var context = Context.Create(DependencyResolver.CreateCachingResolver());
+            var objectConstructionTask = context.DependencyResolver.ResolveAll<IObjectConstructionTask>();
+
+            Assert.IsTrue(objectConstructionTask.Any(x=>x.GetType() == typeof(ObjectCachingResolverTask)));
+            Assert.IsTrue(objectConstructionTask.Any(x => x.GetType() == typeof(ObjectCachingSaverTask)));
         }
 
         #region Stubs

@@ -1,5 +1,8 @@
-﻿namespace Glass.Mapper.Umb.CastleWindsor
+﻿using System;
+
+namespace Glass.Mapper.Umb.CastleWindsor
 {
+    [Obsolete("This class is obsolete; use the GlassConfiguration class instead")]
     public class Config
     {
         public Config()

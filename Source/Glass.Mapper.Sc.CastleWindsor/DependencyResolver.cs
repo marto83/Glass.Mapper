@@ -19,6 +19,7 @@
 using System.Collections;
 using Castle.Windsor;
 using System.Collections.Generic;
+using Glass.Mapper.Configuration;
 
 namespace Glass.Mapper.Sc.CastleWindsor
 {
@@ -32,7 +33,7 @@ namespace Glass.Mapper.Sc.CastleWindsor
         /// Creates the standard resolver.
         /// </summary>
         /// <returns>IDependencyResolver.</returns>
-        public static IDependencyResolver CreateStandardResolver(Config config)
+        public static IDependencyResolver CreateStandardResolver(GlassConfiguration config)
         {
             IWindsorContainer container = new WindsorContainer();
             container.Install(new SitecoreInstaller(config));
@@ -45,7 +46,29 @@ namespace Glass.Mapper.Sc.CastleWindsor
         /// <returns>IDependencyResolver.</returns>
         public static IDependencyResolver CreateStandardResolver()
         {
-            return CreateStandardResolver(new Config());
+            return CreateStandardResolver(new GlassConfiguration());
+        }
+
+        //
+
+        /// <summary>
+        /// Creates the standard resolver.
+        /// </summary>
+        /// <returns>IDependencyResolver.</returns>
+        public static IDependencyResolver CreateCachingResolver(GlassConfiguration config)
+        {
+            IWindsorContainer container = new WindsorContainer();
+            container.Install(new SitecoreCachingInstaller(config));
+            return new DependencyResolver(container);
+        }
+
+        /// <summary>
+        /// Creates the standard resolver.
+        /// </summary>
+        /// <returns>IDependencyResolver.</returns>
+        public static IDependencyResolver CreateCachingResolver()
+        {
+            return CreateCachingResolver(new GlassConfiguration());
         }
 
         /// <summary>

@@ -69,7 +69,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Start\GlassMapperUmb.cs.pp" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Glass.Mapper.Umb\Glass.Mapper.Umb.csproj">

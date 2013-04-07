@@ -88,6 +88,7 @@
     <Compile Include="Configuration\GlassConfigurationFactoryFixture.cs" />
     <Compile Include="ContextFixture.cs" />
     <Compile Include="ExtensionMethodFixture.cs" />
+    <Compile Include="Pipelines\PipelineArgsFactoryFixture.cs" />
     <Compile Include="Pipelines\ConfigurationResolver\Tasks\StandardResolver\ConfigurationStandardResolverTaskFixture.cs" />
     <Compile Include="Pipelines\ObjectConstruction\Tasks\CreateConcrete\LazyObjectInterceptorFixture.cs" />
     <Compile Include="Pipelines\ObjectConstruction\Tasks\CreateInterface\CreateInterfaceTaskFixture.cs" />

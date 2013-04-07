@@ -49,6 +49,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Castle.Core.3.2.0\lib\net40-client\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\Glass.Mapper.Sc.CastleWindsor\bin\Debug - Aaron\Castle.Windsor.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\Tests\Unit Tests\Glass.Mapper.Tests\bin\Debug - Aaron\nunit.framework.dll</HintPath>
     </Reference>
@@ -65,6 +68,7 @@
   <ItemGroup>
     <Compile Include="AbstractDataMapper.cs" />
     <Compile Include="AbstractDataMappingContext.cs" />
+    <Compile Include="AbstractDependencyInstaller.cs" />
     <Compile Include="AbstractService.cs" />
     <Compile Include="AbstractTypeSavingContext.cs" />
     <Compile Include="Caching\CacheKey.cs" />
@@ -109,9 +113,12 @@
     <Compile Include="IGlassConfiguration.cs" />
     <Compile Include="Pipelines\ConfigurationResolver\Tasks\OnDemandResolver\ConfigurationOnDemandResolverTask.cs" />
     <Compile Include="Pipelines\ConfigurationResolver\Tasks\OnDemandResolver\OnDemandLoader.cs" />
+    <Compile Include="Pipelines\ObjectConstruction\PipelineArgsFactory.cs" />
+    <Compile Include="Pipelines\ObjectConstruction\IPipelineArgsFactory.cs" />
     <Compile Include="Pipelines\ObjectConstruction\ObjectCachingArgs.cs" />
     <Compile Include="Pipelines\ObjectConstruction\Tasks\ObjectCachingResolver\ObjectCachingResolverTask.cs" />
     <Compile Include="Pipelines\ObjectConstruction\Tasks\ObjectCachingSaver\ObjectCachingSaverTask.cs" />
+    <Compile Include="Pipelines\ObjectConstruction\Tasks\ObjectCachingTask.cs" />
     <Compile Include="Profilers\ChainedProfiler.cs" />
     <Compile Include="Profilers\IPerformanceProfiler.cs" />
     <Compile Include="MapperException.cs" />

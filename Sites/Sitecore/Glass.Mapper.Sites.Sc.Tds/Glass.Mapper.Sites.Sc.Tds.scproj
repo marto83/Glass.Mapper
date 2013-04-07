@@ -219,6 +219,7 @@
     <SitecoreItem Include="sitecore\layout\Devices\Xml.item">
       <Icon>/temp/IconCache/Software/32x32/text_code.png</Icon>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
+      <ChildItemSynchronization>NoChildSynchronization</ChildItemSynchronization>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\layout\Layouts.item">
       <Icon>/temp/IconCache/Applications/16x16/windows.png</Icon>
