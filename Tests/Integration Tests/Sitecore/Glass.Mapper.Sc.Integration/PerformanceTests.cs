@@ -16,6 +16,7 @@
 */ 
 //-CRE-
 
+
 using System;
 using System.Diagnostics;
 using Glass.Mapper.Sc.CastleWindsor;
@@ -59,7 +60,7 @@ namespace Glass.Mapper.Sc.Integration
             _expected = "hello world";
             _id = new Guid("{59784F74-F830-4BCD-B1F0-1A08616EF726}");
 
-            _context = Context.Create(DependencyResolver.CreateStandardResolver());
+            _context = Context.Create(Utilities.CreateStandardResolver());
 
 
             _context.Load(new SitecoreAttributeConfigurationLoader("Glass.Mapper.Sc.Integration"));
@@ -107,13 +108,177 @@ namespace Glass.Mapper.Sc.Integration
             }
 
             double total = _glassTotal / _rawTotal;
-            Console.WriteLine("Preformance Test Count: {0} Ratio: {1}".Formatted(count, total));
+            Console.WriteLine("Performance Test Count: {0} Ratio: {1} Average: {2}".Formatted(count, total, _glassTotal/count));
+        }
+
+        [Test]
+        [Timeout(120000)]
+        [Repeat(10000)]
+        public void GetItems_LotsOfProperties(
+            [Values(1000, 10000, 50000)] int count
+            )
+        {
+
+            for (int i = 0; i < count; i++)
+            {
+                _glassWatch.Reset();
+                _rawWatch.Reset();
+
+                _rawWatch.Start();
+                var rawItem = _db.GetItem(new ID(_id));
+                var value1 = rawItem["Field"];
+                _rawWatch.Stop();
+                _rawTotal = _rawWatch.ElapsedTicks;
+
+                _glassWatch.Start();
+                var glassItem = _service.GetItem<StubClassWithLotsOfProperties>(_id);
+                var value2 = glassItem.Field1;
+                _glassWatch.Stop();
+                _glassTotal = _glassWatch.ElapsedTicks;
+
+            }
+
+            double total = _glassTotal / _rawTotal;
+            Console.WriteLine("Performance Test Count: {0} Ratio: {1} Average: {2}".Formatted(count, total, _glassTotal/count));
+        }
+
+        [Test]
+        [Timeout(120000)]
+        public void GetItems_InheritanceTest(
+            [Values(100, 200, 300)] int count
+            )
+        {
+            string path = "/sitecore/content/Tests/PerformanceTests/InheritanceTest";
+
+            for (int i = 0; i < count; i++)
+            {
+                _glassWatch.Reset();
+                _rawWatch.Reset();
+
+                _rawWatch.Start();
+
+                var glassItem1 = _service.GetItem<StubClassLevel5>(path);
+                var value1 = glassItem1.Field;
+
+                _rawWatch.Stop();
+                _rawTotal = _rawWatch.ElapsedTicks;
+
+                _glassWatch.Start();
+                var glassItem2 = _service.GetItem<StubClassLevel1>(path);
+                var value2 = glassItem2.Field;
+                _glassWatch.Stop();
+                _glassTotal = _glassWatch.ElapsedTicks;
+
+            }
+
+            double total = _glassTotal / _rawTotal;
+            Console.WriteLine("Performance inheritance Test Count: {0},  Single: {1}, 5 Levels: {2}, Ratio: {3}".Formatted(count, _rawTotal, _glassTotal, total));
         }
 
         #region Stubs
 
+
+        [SitecoreType]
+        public class StubClassWithLotsOfProperties
+        {
+            [SitecoreField("Field",Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field1 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field2 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field3 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field4 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field5 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field6 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field7 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field8 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field9 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field10 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field11 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field12 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field13 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field14 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field15 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field16 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field17 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field18 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field19 { get; set; }
+
+            [SitecoreField("Field", Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field20 { get; set; }
+
+
+            [SitecoreId]
+            public virtual Guid Id { get; set; }
+        }
+
+
         [SitecoreType]
         public class StubClass
+        {
+            [SitecoreField(Setting = SitecoreFieldSettings.RichTextRaw)]
+            public virtual string Field { get; set; }
+
+            [SitecoreId]
+            public virtual Guid Id { get; set; }
+        }
+
+        [SitecoreType]
+        public class StubClassLevel1 : StubClassLevel2
+        {
+            
+        }
+        [SitecoreType]
+        public class StubClassLevel2 : StubClassLevel3
+        {
+
+        }
+        [SitecoreType]
+        public class StubClassLevel3 : StubClassLevel4
+        {
+
+        }
+        [SitecoreType]
+        public class StubClassLevel4 : StubClassLevel5
+        {
+
+        }
+        [SitecoreType]
+        public class StubClassLevel5
         {
             [SitecoreField(Setting = SitecoreFieldSettings.RichTextRaw)]
             public virtual string Field { get; set; }
@@ -214,6 +379,7 @@ namespace Glass.Mapper.Sc.Integration
 
     }
 }
+
 
 
 

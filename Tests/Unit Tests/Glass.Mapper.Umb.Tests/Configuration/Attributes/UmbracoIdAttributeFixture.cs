@@ -16,6 +16,7 @@
 */ 
 //-CRE-
 
+
 using FluentAssertions;
 using Glass.Mapper.Umb.Configuration;
 using Glass.Mapper.Umb.Configuration.Attributes;
@@ -30,20 +31,37 @@ namespace Glass.Mapper.Umb.Tests.Configuration.Attributes
         [Test]
         public void Does_UmbracoIdAttribute_Extend_IdAttribute()
         {
-            typeof(IdAttribute).IsAssignableFrom(typeof(UmbracoIdAttribute)).Should().BeTrue();
-        }
+            //Assign
+            var type = typeof(IdAttribute);
 
-       
+            //Act
+
+            //Assert
+            type.IsAssignableFrom(typeof(UmbracoIdAttribute)).Should().BeTrue();
+        }
 
         #region Method - Configure
 
         [Test]
-        public void Configure_ConfigureCalled_UmbracoIdConfigurationReturned()
+        public void Configure_ConfigureCalled_WithInt_UmbracoIdConfigurationReturned()
         {
             //Assign
-            UmbracoIdAttribute attr = new UmbracoIdAttribute();
-            var propertyInfo = typeof(StubClass).GetProperty("DummyProperty");
+            var attr = new UmbracoIdAttribute();
+            var propertyInfo = typeof(StubClass).GetProperty("DummyPropertyInt");
 
+            //Act
+            var result = attr.Configure(propertyInfo) as UmbracoIdConfiguration;
+
+            //Assert
+            result.Should().NotBeNull();
+        }
+
+        [Test]
+        public void Configure_ConfigureCalled_WithGuid_UmbracoIdConfigurationReturned()
+        {
+            //Assign
+            var attr = new UmbracoIdAttribute();
+            var propertyInfo = typeof(StubClass).GetProperty("DummyPropertyGuid");
 
             //Act
             var result = attr.Configure(propertyInfo) as UmbracoIdConfiguration;
@@ -58,12 +76,14 @@ namespace Glass.Mapper.Umb.Tests.Configuration.Attributes
 
         public class StubClass
         {
-            public int DummyProperty { get; set; }
+            public int DummyPropertyInt { get; set; }
+            public int DummyPropertyGuid { get; set; }
         }
 
         #endregion
     }
 }
+
 
 
 

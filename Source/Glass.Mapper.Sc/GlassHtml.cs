@@ -16,6 +16,7 @@
 */ 
 //-CRE-
 
+
 using System;
 using System.Collections.Specialized;
 using System.Linq;
@@ -26,6 +27,7 @@ using Glass.Mapper.Sc.Configuration;
 using Glass.Mapper.Sc.RenderField;
 using Glass.Mapper.Sc.Web.Ui;
 using Sitecore.Data.Items;
+using Sitecore.Text;
 using Sitecore.Web.UI.WebControls;
 
 namespace Glass.Mapper.Sc
@@ -33,19 +35,25 @@ namespace Glass.Mapper.Sc
     /// <summary>
     /// This class contains a set of helpers that make converting items mapped in Glass.Sitecore.Mapper to HTML
     /// </summary>
-    public class GlassHtml
+    public class GlassHtml : IGlassHtml
     {
-        private readonly ISitecoreService _service;
+        /// <summary>
+        /// Gets the sitecore context.
+        /// </summary>
+        /// <value>
+        /// The sitecore context.
+        /// </value>
+        public  ISitecoreContext SitecoreContext { get; private set; }
         private readonly Context _context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GlassHtml"/> class.
         /// </summary>
-        /// <param name="service">The service that will be used to load and save data</param>
-        public GlassHtml(ISitecoreService service)
+        /// <param name="sitecoreContext">The service that will be used to load and save data</param>
+        public GlassHtml(ISitecoreContext sitecoreContext)
         {
-            _service = service;
-            _context = service.GlassContext;
+            SitecoreContext = sitecoreContext;
+            _context = sitecoreContext.GlassContext;
         }
 
 
@@ -53,10 +61,13 @@ namespace Glass.Mapper.Sc
         /// Edits the frame.
         /// </summary>
         /// <param name="buttons">The buttons.</param>
-        /// <returns>GlassEditFrame.</returns>
-        public GlassEditFrame EditFrame(string buttons)
+        /// <param name="path">The path.</param>
+        /// <returns>
+        /// GlassEditFrame.
+        /// </returns>
+        public GlassEditFrame EditFrame(string buttons, string path = null)
         {
-            var frame = new GlassEditFrame(buttons, HttpContext.Current);
+            var frame = new GlassEditFrame(buttons, HttpContext.Current.Response.Output, path);
             frame.RenderFirstPart();
             return frame;
         }
@@ -163,6 +174,48 @@ namespace Glass.Mapper.Sc
             return RenderImage(image, null);
         }
 
+
+        /// <summary>
+        /// The image width
+        /// </summary>
+        public const string ImageWidth = "width";
+        /// <summary>
+        /// The image height
+        /// </summary>
+        public const string ImageHeight = "height";
+     
+    
+        /// <summary>
+        /// The image tag format
+        /// </summary>
+        public const string ImageTagFormat = "<img src='{0}' {1} />";
+
+
+     
+       /// <summary>
+       /// Renders an image allowing simple page editor support
+       /// </summary>
+       /// <typeparam name="T">The model type</typeparam>
+       /// <param name="model">The model that contains the image field</param>
+       /// <param name="field">A lambda expression to the image field, should be of type Glass.Mapper.Sc.Fields.Image</param>
+       /// <param name="parameters">Image parameters, e.g. width, height</param>
+       /// <param name="isEditable">Indicates if the field should be editable</param>
+       /// <returns></returns>
+        public virtual string RenderImage<T>(T model,
+                                             Expression<Func<T, object>> field, 
+                                             ImageParameters parameters = null,
+                                             bool isEditable = false)
+        {
+            if (IsInEditingMode && isEditable)
+            {
+                return Editable(model, field, parameters);
+            }
+            else
+            {
+                return RenderImage(field.Compile().Invoke(model) as Fields.Image, parameters==null ? null : parameters.Parameters);
+            }
+        }
+
         /// <summary>
         /// Renders HTML for an image
         /// </summary>
@@ -171,21 +224,39 @@ namespace Glass.Mapper.Sc
         /// <returns>An img HTML element</returns>
         public virtual string RenderImage(Fields.Image image, NameValueCollection attributes)
         {
-            if (image == null) return "";
+
+            /*
+             * ME - This method is used to render images rather than going back to the fieldrender
+             * because it stops another call having to be passed to Sitecore.
+             */
+
+            if (image == null || image.Src.IsNullOrWhiteSpace()) return "";
 
             if (attributes == null) attributes = new NameValueCollection();
+           
+           
+            var builder = new UrlBuilder(image.Src);
+            
+            //append to url values
+            if (attributes[ImageWidth].IsNotNullOrEmpty())
+                attributes.Add(ImageParameters.WIDTH, attributes[ImageWidth]);
+            if (attributes[ImageHeight].IsNotNullOrEmpty())
+                attributes.Add(ImageParameters.HEIGHT, attributes[ImageHeight]);
 
-            string format = "<img src='{0}' {1}/>";
+            foreach (var key in attributes.AllKeys)
+            {
+                if(key=="alt" || key=="class" || key=="style")
+                    continue;
+                
+                builder[key] = attributes[key];
+            }
 
             //should there be some warning about these removals?
             AttributeCheck(attributes, "class", image.Class);
             AttributeCheck(attributes, "alt", image.Alt);
-            if (image.Height > 0)
-                AttributeCheck(attributes, "height", image.Height.ToString());
-            if (image.Width > 0)
-                AttributeCheck(attributes, "width", image.Width.ToString());
 
-            return format.Formatted(image.Src, Utilities.ConvertAttributes(attributes));
+
+            return ImageTagFormat.Formatted(builder.ToString(), Utilities.ConvertAttributes(attributes));
         }
 
         /// <summary>
@@ -320,7 +391,7 @@ namespace Glass.Mapper.Sc
         private string MakeEditable<T>(Expression<Func<T, object>> field, Expression<Func<T, string>> standardOutput, T target,  string parameters)
         {
 
-            if (standardOutput == null || IsInEditingMode)
+            if (IsInEditingMode)
             {
                 if (field.Parameters.Count > 1)
                     throw new MapperException("To many parameters in linq expression {0}".Formatted(field.Body));
@@ -356,54 +427,13 @@ namespace Glass.Mapper.Sc
 
                 var site = global::Sitecore.Context.Site;
 
-
                 if (_context == null) 
                     throw new NullReferenceException("Context cannot be null");
-                
-                //ME - test if we can remove this
-                ////if the class a proxy then we have to get it's base type
-                //Type type;
-                //if (finalTarget is IProxyTargetAccessor)
-                //{
-                //    //first try the base type
-                //    type = finalTarget.GetType().BaseType;
-
-                //    //if it doesn't contain the base type then we need to check the interfaces
-                //    if (!context.TypeConfigurations.ContainsKey(type))
-                //    {
-
-                //        var interfaces = finalTarget.GetType().GetInterfaces();
-
-                //        string name = finalTarget.GetType().Name;
-                //        //be default castle will use the name of the class it is proxying for it's own name
-                //        foreach (var inter in interfaces)
-                //        {
-                //            if (name.StartsWith(inter.Name))
-                //            {
-                //                type = inter;
-                //                break;
-                //            }
-                //        }
-                //    }
-                //}
-                //else
-                //    type = finalTarget.GetType();
-
 
                 var config = _context.GetTypeConfiguration(finalTarget) as SitecoreTypeConfiguration;
 
-                //Guid id = Guid.Empty;
-
-                //try
-                //{
-                //    id = context.GetClassId(type, finalTarget);
-                //}
-                //catch (SitecoreIdException ex)
-                //{
-                //    throw new MapperException("Page editting error. Type {0} can not be used for editing. Could not find property with SitecoreID attribute. See inner exception".Formatted(typeof(T).FullName), ex);
-                //}
-
-                var scClass = config.ResolveItem(finalTarget, _service.Database);
+              
+                var scClass = config.ResolveItem(finalTarget, SitecoreContext.Database);
 
                 //lambda expression does not always return expected memberinfo when inheriting
                 //c.f. http://stackoverflow.com/questions/6658669/lambda-expression-not-returning-expected-memberinfo
@@ -458,13 +488,17 @@ namespace Glass.Mapper.Sc
             }
             else
             {
-                return standardOutput.Compile().Invoke(target);
+                if (standardOutput != null)
+                    return standardOutput.Compile().Invoke(target);
+                else
+                    return (field.Compile().Invoke(target) ?? string.Empty).ToString();
             }
             //return field.Compile().Invoke(target).ToString();
         }
 
     }
 }
+
 
 
 

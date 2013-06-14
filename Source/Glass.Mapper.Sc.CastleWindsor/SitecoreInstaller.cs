@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2012 Michael Edwards
  
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,13 +13,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  
-*/
+*/ 
 //-CRE-
+
 
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-using Glass.Mapper.Configuration;
 using Glass.Mapper.Pipelines.ConfigurationResolver;
 using Glass.Mapper.Pipelines.ConfigurationResolver.Tasks.OnDemandResolver;
 using Glass.Mapper.Pipelines.ConfigurationResolver.Tasks.StandardResolver;
@@ -28,81 +28,117 @@ using Glass.Mapper.Pipelines.DataMapperResolver.Tasks;
 using Glass.Mapper.Pipelines.ObjectConstruction;
 using Glass.Mapper.Pipelines.ObjectConstruction.Tasks.CreateConcrete;
 using Glass.Mapper.Pipelines.ObjectConstruction.Tasks.CreateInterface;
-using Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingResolver;
-using Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingSaver;
 using Glass.Mapper.Pipelines.ObjectSaving;
 using Glass.Mapper.Pipelines.ObjectSaving.Tasks;
 using Glass.Mapper.Sc.CastleWindsor.Pipelines.ObjectConstruction;
 using Glass.Mapper.Sc.Configuration;
 using Glass.Mapper.Sc.DataMappers;
 using Glass.Mapper.Sc.DataMappers.SitecoreQueryParameters;
+using Glass.Mapper.Sc.Pipelines.ConfigurationResolver;
+using Glass.Mapper.Sc.Pipelines.ObjectConstruction;
 
 namespace Glass.Mapper.Sc.CastleWindsor
 {
     /// <summary>
     /// Class SitecoreInstaller
     /// </summary>
-    public class SitecoreInstaller : AbstractDependencyInstaller
+    public class SitecoreInstaller : IWindsorInstaller
     {
-        public SitecoreInstaller()
-            : base(new GlassConfiguration())
+        /// <summary>
+        /// Gets the config.
+        /// </summary>
+        /// <value>
+        /// The config.
+        /// </value>
+        public Config Config { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the data mapper installer.
+        /// </summary>
+        /// <value>
+        /// The data mapper installer.
+        /// </value>
+        public IWindsorInstaller DataMapperInstaller { get; set; }
+
+        /// <summary>
+        /// Gets or sets the query parameter installer.
+        /// </summary>
+        /// <value>
+        /// The query parameter installer.
+        /// </value>
+        public IWindsorInstaller QueryParameterInstaller { get; set; }
+
+        /// <summary>
+        /// Gets or sets the data mapper task installer.
+        /// </summary>
+        /// <value>
+        /// The data mapper task installer.
+        /// </value>
+        public IWindsorInstaller DataMapperTaskInstaller { get; set; }
+
+        /// <summary>
+        /// Gets or sets the configuration resolver task installer.
+        /// </summary>
+        /// <value>
+        /// The configuration resolver task installer.
+        /// </value>
+        public IWindsorInstaller ConfigurationResolverTaskInstaller { get; set; }
+
+        /// <summary>
+        /// Gets or sets the objection construction task installer.
+        /// </summary>
+        /// <value>
+        /// The objection construction task installer.
+        /// </value>
+        public IWindsorInstaller ObjectionConstructionTaskInstaller { get; set; }
+
+        /// <summary>
+        /// Gets or sets the object saving task installer.
+        /// </summary>
+        /// <value>
+        /// The object saving task installer.
+        /// </value>
+        public IWindsorInstaller ObjectSavingTaskInstaller { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SitecoreInstaller"/> class.
+        /// </summary>
+        public SitecoreInstaller():this(new Config())
         {
         }
 
-        public SitecoreInstaller(GlassConfiguration config)
-            : base(config)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SitecoreInstaller"/> class.
+        /// </summary>
+        /// <param name="config">The config.</param>
+        public SitecoreInstaller(Config config)
         {
+            Config = config;
+
+            DataMapperInstaller = new DataMapperInstaller(config);
+            QueryParameterInstaller = new QueryParameterInstaller(config);
+            DataMapperTaskInstaller = new DataMapperTaskInstaller(config);
+            ConfigurationResolverTaskInstaller = new ConfigurationResolverTaskInstaller(config);
+            ObjectionConstructionTaskInstaller = new ObjectionConstructionTaskInstaller(config);
+            ObjectSavingTaskInstaller = new ObjectSavingTaskInstaller(config);
         }
+
 
         /// <summary>
         /// Performs the installation in the <see cref="T:Castle.Windsor.IWindsorContainer" />.
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="store">The configuration store.</param>
-        public override void Install(IWindsorContainer container, IConfigurationStore store)
+        public virtual void Install(IWindsorContainer container, IConfigurationStore store)
         {
             // For more on component registration read: http://docs.castleproject.org/Windsor.Registering-components-one-by-one.ashx
             container.Install(
-                new DataMapperInstaller(Config),
-                new QueryParameterInstaller(Config),
-                new DataMapperTasksInstaller(Config),
-                new ConfigurationResolverTaskInstaller(Config),
-                new ObjectConstructionTaskInstaller(Config),
-                new ObjectSavingTaskInstaller(Config)
-                );
-        }
-    }
-
-    /// <summary>
-    /// Class SitecoreInstaller
-    /// </summary>
-    public class SitecoreCachingInstaller : AbstractDependencyInstaller
-    {
-        public SitecoreCachingInstaller()
-            : base(new GlassConfiguration())
-        {
-        }
-
-        public SitecoreCachingInstaller(GlassConfiguration config)
-            : base(config)
-        {
-        }
-
-        /// <summary>
-        /// Performs the installation in the <see cref="T:Castle.Windsor.IWindsorContainer" />.
-        /// </summary>
-        /// <param name="container">The container.</param>
-        /// <param name="store">The configuration store.</param>
-        public override void Install(IWindsorContainer container, IConfigurationStore store)
-        {
-            // For more on component registration read: http://docs.castleproject.org/Windsor.Registering-components-one-by-one.ashx
-            container.Install(
-                new DataMapperInstaller(Config),
-                new QueryParameterInstaller(Config),
-                new DataMapperTasksInstaller(Config),
-                new ConfigurationResolverTaskInstaller(Config),
-                new ObjectCachingTaskInstaller(Config),
-                new ObjectSavingTaskInstaller(Config)
+                DataMapperInstaller,
+                QueryParameterInstaller,
+                DataMapperTaskInstaller,
+                ConfigurationResolverTaskInstaller,
+                ObjectionConstructionTaskInstaller,
+                ObjectSavingTaskInstaller
                 );
         }
     }
@@ -111,11 +147,23 @@ namespace Glass.Mapper.Sc.CastleWindsor
     /// Installs the components descended from AbstractDataMapper. These are used to map data
     /// to and from the CMS.
     /// </summary>
-    public class DataMapperInstaller : AbstractDependencyInstaller
+    public class DataMapperInstaller : IWindsorInstaller
     {
-        public DataMapperInstaller(GlassConfiguration config)
-            : base(config)
+        /// <summary>
+        /// Gets the config.
+        /// </summary>
+        /// <value>
+        /// The config.
+        /// </value>
+        public Config Config { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataMapperInstaller"/> class.
+        /// </summary>
+        /// <param name="config">The config.</param>
+        public DataMapperInstaller(Config config)
         {
+            Config = config;
         }
 
         /// <summary>
@@ -123,10 +171,11 @@ namespace Glass.Mapper.Sc.CastleWindsor
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="store">The configuration store.</param>
-        public override void Install(IWindsorContainer container, IConfigurationStore store)
+        public virtual void Install(IWindsorContainer container, IConfigurationStore store)
         {
-
+           
             container.Register(
+                Component.For<AbstractDataMapper>().ImplementedBy<SitecoreIgnoreMapper>().LifestyleTransient(),
                 Component.For<AbstractDataMapper>().ImplementedBy<SitecoreChildrenMapper>().LifestyleTransient(),
                 Component.For<AbstractDataMapper>().ImplementedBy<SitecoreFieldBooleanMapper>().LifestyleTransient(),
                 Component.For<AbstractDataMapper>().ImplementedBy<SitecoreFieldDateTimeMapper>().LifestyleTransient(),
@@ -171,9 +220,9 @@ namespace Glass.Mapper.Sc.CastleWindsor
                 Component.For<AbstractDataMapper>().ImplementedBy<SitecoreParentMapper>().LifestyleTransient(),
                 Component.For<AbstractDataMapper>().ImplementedBy<SitecoreQueryMapper>()
                          .DynamicParameters((k, d) =>
-                             {
-                                 d["parameters"] = k.ResolveAll<ISitecoreQueryParameter>();
-                             })
+                         {
+                             d["parameters"] = k.ResolveAll<ISitecoreQueryParameter>();
+                         })
                          .LifestyleTransient()
                 );
         }
@@ -182,11 +231,23 @@ namespace Glass.Mapper.Sc.CastleWindsor
     /// <summary>
     /// Used by the SitecoreQueryMapper to replace placeholders in a query
     /// </summary>
-    public class QueryParameterInstaller : AbstractDependencyInstaller
+    public class QueryParameterInstaller : IWindsorInstaller
     {
-        public QueryParameterInstaller(GlassConfiguration config)
-            : base(config)
+        /// <summary>
+        /// Gets the config.
+        /// </summary>
+        /// <value>
+        /// The config.
+        /// </value>
+        public Config Config { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QueryParameterInstaller"/> class.
+        /// </summary>
+        /// <param name="config">The config.</param>
+        public QueryParameterInstaller(Config config)
         {
+            Config = config;
         }
 
         /// <summary>
@@ -194,7 +255,7 @@ namespace Glass.Mapper.Sc.CastleWindsor
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="store">The configuration store.</param>
-        public override void Install(IWindsorContainer container, IConfigurationStore store)
+        public virtual void Install(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(
                 Component.For<ISitecoreQueryParameter>().ImplementedBy<ItemDateNowParameter>().LifestyleTransient(),
@@ -210,20 +271,30 @@ namespace Glass.Mapper.Sc.CastleWindsor
     /// Data Mapper Resolver Tasks -
     /// These tasks are run when Glass.Mapper tries to resolve which DataMapper should handle a given property, e.g.
     /// </summary>
-    public class DataMapperTasksInstaller : AbstractDependencyInstaller
+    public class DataMapperTaskInstaller : IWindsorInstaller
     {
+        /// <summary>
+        /// Gets the config.
+        /// </summary>
+        /// <value>
+        /// The config.
+        /// </value>
+         public Config Config { get; private set; }
 
-        public DataMapperTasksInstaller(GlassConfiguration config)
-            : base(config)
+         /// <summary>
+         /// Initializes a new instance of the <see cref="DataMapperTaskInstaller"/> class.
+         /// </summary>
+         /// <param name="config">The config.</param>
+        public DataMapperTaskInstaller(Config config)
         {
+            Config = config;
         }
-
         /// <summary>
         /// Performs the installation in the <see cref="T:Castle.Windsor.IWindsorContainer" />.
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="store">The configuration store.</param>
-        public override void Install(IWindsorContainer container, IConfigurationStore store)
+        public virtual void Install(IWindsorContainer container, IConfigurationStore store)
         {
             // Tasks are called in the order they are specified.
             container.Register(
@@ -237,10 +308,24 @@ namespace Glass.Mapper.Sc.CastleWindsor
     /// <summary>
     /// Configuration Resolver Tasks - These tasks are run when Glass.Mapper tries to find the configuration the user has requested based on the type passsed.
     /// </summary>
-    public class ConfigurationResolverTaskInstaller : AbstractDependencyInstaller
+    public class ConfigurationResolverTaskInstaller : IWindsorInstaller
     {
-        public ConfigurationResolverTaskInstaller(GlassConfiguration config):base(config)
+
+        /// <summary>
+        /// Gets the config.
+        /// </summary>
+        /// <value>
+        /// The config.
+        /// </value>
+         public Config Config { get; private set; }
+
+         /// <summary>
+         /// Initializes a new instance of the <see cref="ConfigurationResolverTaskInstaller"/> class.
+         /// </summary>
+         /// <param name="config">The config.</param>
+        public ConfigurationResolverTaskInstaller(Config config)
         {
+            Config = config;
         }
 
 
@@ -249,13 +334,20 @@ namespace Glass.Mapper.Sc.CastleWindsor
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="store">The configuration store.</param>
-        public override void Install(IWindsorContainer container, IConfigurationStore store)
+        public virtual void Install(IWindsorContainer container, IConfigurationStore store)
         {
             // These tasks are run when Glass.Mapper tries to find the configuration the user has requested based on the type passed, e.g. 
             // if your code contained
             //       service.GetItem<MyClass>(id) 
             // the standard resolver will return the MyClass configuration. 
             // Tasks are called in the order they are specified below.
+
+            container.Register(
+               Component.For<IConfigurationResolverTask>()
+                        .ImplementedBy<TemplateInferredTypeTask>()
+                        .LifestyleTransient()
+               );
+
             container.Register(
                 Component.For<IConfigurationResolverTask>()
                          .ImplementedBy<ConfigurationStandardResolverTask>()
@@ -267,18 +359,32 @@ namespace Glass.Mapper.Sc.CastleWindsor
                          .ImplementedBy<ConfigurationOnDemandResolverTask<SitecoreTypeConfiguration>>()
                          .LifestyleTransient()
                 );
+
+           
         }
     }
 
     /// <summary>
     /// Object Construction Tasks - These tasks are run when an a class needs to be instantiated by Glass.Mapper.
     /// </summary>
-    public class ObjectConstructionTaskInstaller : AbstractDependencyInstaller
+    public class ObjectionConstructionTaskInstaller : IWindsorInstaller
     {
 
-        public ObjectConstructionTaskInstaller(GlassConfiguration config)
-            : base(config)
+        /// <summary>
+        /// Gets the config.
+        /// </summary>
+        /// <value>
+        /// The config.
+        /// </value>
+         public Config Config { get; private set; }
+
+         /// <summary>
+         /// Initializes a new instance of the <see cref="ObjectionConstructionTaskInstaller"/> class.
+         /// </summary>
+         /// <param name="config">The config.</param>
+        public ObjectionConstructionTaskInstaller(Config config)
         {
+            Config = config;
         }
 
 
@@ -287,12 +393,17 @@ namespace Glass.Mapper.Sc.CastleWindsor
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="store">The configuration store.</param>
-        public override void Install(IWindsorContainer container, IConfigurationStore store)
+        public virtual void Install(IWindsorContainer container, IConfigurationStore store)
         {
+            //dynamic must be first
+            container.Register(
+                Component.For<IObjectConstructionTask>().ImplementedBy<CreateDynamicTask>().LifestyleTransient()
+                );
+
             if (Config.UseWindsorContructor)
             {
                 container.Register(
-                    Component.For<IObjectConstructionTask>().ImplementedBy<WindsorConstruction>().LifestyleTransient()
+                    Component.For<IObjectConstructionTask>().ImplementedBy<WindsorConstruction>().LifestyleTransient() 
                     );
             }
 
@@ -304,57 +415,33 @@ namespace Glass.Mapper.Sc.CastleWindsor
         }
     }
 
-     /// <summary>
-    /// Object Construction Tasks - These tasks are run when an a class needs to be instantiated by Glass.Mapper.
-    /// </summary>
-    public class ObjectCachingTaskInstaller : AbstractDependencyInstaller
-    {
-
-        public ObjectCachingTaskInstaller(GlassConfiguration config)
-            : base(config)
-        {
-        }
-
-
-        /// <summary>
-        /// Performs the installation in the <see cref="T:Castle.Windsor.IWindsorContainer" />.
-        /// </summary>
-        /// <param name="container">The container.</param>
-        /// <param name="store">The configuration store.</param>
-        public override void Install(IWindsorContainer container, IConfigurationStore store)
-        {
-            if (Config.UseWindsorContructor)
-            {
-                container.Register(
-                    Component.For<IObjectConstructionTask>().ImplementedBy<WindsorConstruction>().LifestyleTransient()
-                    );
-            }
-
-            container.Register(
-                // Tasks are called in the order they are specified below.
-                Component.For<IObjectConstructionTask>().ImplementedBy<ObjectCachingResolverTask>().LifestyleTransient(),
-                Component.For<IObjectConstructionTask>().ImplementedBy<CreateConcreteTask>().LifestyleTransient(),
-                Component.For<IObjectConstructionTask>().ImplementedBy<CreateInterfaceTask>().LifestyleTransient(),
-                Component.For<IObjectConstructionTask>().ImplementedBy<ObjectCachingSaverTask>().LifestyleTransient()
-                );
-        }
-    }
-
     /// <summary>
     /// Object Saving Tasks - These tasks are run when an a class needs to be saved by Glass.Mapper.
     /// </summary>
-    public class ObjectSavingTaskInstaller : AbstractDependencyInstaller
+    public class ObjectSavingTaskInstaller : IWindsorInstaller
     {
-        public ObjectSavingTaskInstaller(GlassConfiguration config):base(config)
-        {
-        }
+        /// <summary>
+        /// Gets the config.
+        /// </summary>
+        /// <value>
+        /// The config.
+        /// </value>
+         public Config Config { get; private set; }
 
+         /// <summary>
+         /// Initializes a new instance of the <see cref="ObjectSavingTaskInstaller"/> class.
+         /// </summary>
+         /// <param name="config">The config.</param>
+        public ObjectSavingTaskInstaller(Config config)
+        {
+            Config = config;
+        }
         /// <summary>
         /// Performs the installation in the <see cref="T:Castle.Windsor.IWindsorContainer" />.
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="store">The configuration store.</param>
-        public override void Install(IWindsorContainer container, IConfigurationStore store)
+        public virtual void Install(IWindsorContainer container, IConfigurationStore store)
         {
             // Tasks are called in the order they are specified below.
             container.Register(
@@ -365,6 +452,7 @@ namespace Glass.Mapper.Sc.CastleWindsor
 
 
 }
+
 
 
 

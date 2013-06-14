@@ -16,6 +16,7 @@
 */ 
 //-CRE-
 
+
 using System;
 using Glass.Mapper.Configuration;
 using Umbraco.Core.Models;
@@ -128,8 +129,53 @@ namespace Glass.Mapper.Umb.Configuration
 
             throw new NotSupportedException("Can not get ID for item");
         }
+
+        /// <summary>
+        /// Called to map each property automatically
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        protected override AbstractPropertyConfiguration AutoMapProperty(System.Reflection.PropertyInfo property)
+        {
+            string name = property.Name;
+            UmbracoInfoType infoType;
+
+            if (name.ToLowerInvariant() == "id")
+            {
+                UmbracoIdConfiguration idConfig = new UmbracoIdConfiguration();
+                idConfig.PropertyInfo = property;
+                return idConfig;
+            }
+
+            if (name.ToLowerInvariant() == "parent")
+            {
+                UmbracoParentConfiguration parentConfig = new UmbracoParentConfiguration();
+                parentConfig.PropertyInfo = property;
+                return parentConfig;
+            }
+            if (name.ToLowerInvariant() == "children")
+            {
+                UmbracoChildrenConfiguration childrenConfig = new UmbracoChildrenConfiguration();
+                childrenConfig.PropertyInfo = property;
+                return childrenConfig;
+            }
+
+            if (Enum.TryParse(name, true, out infoType))
+            {
+                UmbracoInfoConfiguration infoConfig = new UmbracoInfoConfiguration();
+                infoConfig.PropertyInfo = property;
+                infoConfig.Type = infoType;
+                return infoConfig;
+            }
+
+            UmbracoPropertyConfiguration fieldConfig = new UmbracoPropertyConfiguration();
+            fieldConfig.PropertyAlias = name;
+            fieldConfig.PropertyInfo = property;
+            return fieldConfig;
+        }
     }
 }
+
 
 
 

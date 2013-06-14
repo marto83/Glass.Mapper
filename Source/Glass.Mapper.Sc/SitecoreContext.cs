@@ -16,10 +16,12 @@
 */ 
 //-CRE-
 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Sitecore.Data;
 using Sitecore.Data.Items;
 
 namespace Glass.Mapper.Sc
@@ -33,9 +35,9 @@ namespace Glass.Mapper.Sc
         /// Initializes a new instance of the <see cref="SitecoreContext"/> class.
         /// </summary>
         public SitecoreContext()
-            : base(global::Sitecore.Context.Database)
+            : base(global::Sitecore.Context.Database, GetContextFromSite())
         {
-
+            
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="AbstractService" /> class.
@@ -54,6 +56,23 @@ namespace Glass.Mapper.Sc
             : base(global::Sitecore.Context.Database, context)
         {
 
+        }
+
+        /// <summary>
+        /// Used for unit tests only
+        /// </summary>
+        /// <param name="database"></param>
+        internal SitecoreContext(Database database):
+            base(database, GetContextFromSite())
+        {
+            
+        }
+        private static string GetContextFromSite()
+        {
+            if (Sitecore.Context.Site == null)
+                return Context.DefaultContextName;
+
+            return Sitecore.Context.Site.Properties["glassContext"] ?? Context.DefaultContextName;
         }
 
         #region ISitecoreContext Members
@@ -111,10 +130,9 @@ namespace Glass.Mapper.Sc
         /// <summary>
         /// Retrieves the current item as the specified type
         /// </summary>
-        /// <param name="type">The type to return.</param>
-        /// <param name="isLazy">if set to <c>true</c> [is lazy].</param>
-        /// <param name="inferType">if set to <c>true</c> [infer type].</param>
-        /// <returns>The current item as the specified type</returns>
+        /// <returns>
+        /// The current item as the specified type
+        /// </returns>
         public dynamic GetCurrentDynamicItem()
         {
             return base.GetDynamicItem(global::Sitecore.Context.Item);
@@ -221,6 +239,7 @@ namespace Glass.Mapper.Sc
 
     }
 }
+
 
 
 

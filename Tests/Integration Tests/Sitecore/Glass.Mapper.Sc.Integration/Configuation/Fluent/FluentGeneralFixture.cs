@@ -16,6 +16,7 @@
 */ 
 //-CRE-
 
+
 using System;
 using Glass.Mapper.Sc.CastleWindsor;
 using Glass.Mapper.Sc.Configuration;
@@ -38,7 +39,8 @@ namespace Glass.Mapper.Sc.Integration.Configuation.Fluent
             string name = "Target";
 
             var db = Sitecore.Configuration.Factory.GetDatabase("master");
-            var context = Context.Create(DependencyResolver.CreateStandardResolver());
+            
+            var context = Context.Create(Utilities.CreateStandardResolver());
 
             var loader = new SitecoreFluentConfigurationLoader();
 
@@ -86,6 +88,7 @@ namespace Glass.Mapper.Sc.Integration.Configuation.Fluent
 
     }
 }
+
 
 
 

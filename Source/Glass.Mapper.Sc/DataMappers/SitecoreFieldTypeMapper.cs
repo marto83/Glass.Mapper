@@ -16,6 +16,7 @@
 */ 
 //-CRE-
 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,7 +80,11 @@ namespace Glass.Mapper.Sc.DataMappers
                 return string.Empty;
             else
             {
-                var typeConfig = context.Service.GlassContext[value.GetType()] as SitecoreTypeConfiguration;
+                var type = value.GetType();
+                var typeConfig = context.Service.GlassContext.GetTypeConfiguration(value) as SitecoreTypeConfiguration;
+
+                if(typeConfig == null)
+                    throw new NullReferenceException("The type {0} has not been loaded into context {1}".Formatted(type.FullName, context.Service.GlassContext.Name));
 
                 var item = typeConfig.ResolveItem(value, context.Service.Database);
                 if(item == null)
@@ -97,8 +102,8 @@ namespace Glass.Mapper.Sc.DataMappers
         /// <returns><c>true</c> if this instance can handle the specified configuration; otherwise, <c>false</c>.</returns>
         public override bool CanHandle(Mapper.Configuration.AbstractPropertyConfiguration configuration,  Context context)
         {
-            return context[configuration.PropertyInfo.PropertyType] != null &&
-                   configuration is SitecoreFieldConfiguration;
+            return configuration is SitecoreFieldConfiguration;// context[configuration.PropertyInfo.PropertyType] != null &&
+                   
         }
 
         /// <summary>
@@ -127,6 +132,7 @@ namespace Glass.Mapper.Sc.DataMappers
         protected bool IsLazy { get; set; }
     }
 }
+
 
 
 

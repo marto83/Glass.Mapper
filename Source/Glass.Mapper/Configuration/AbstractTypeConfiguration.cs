@@ -16,6 +16,7 @@
 */ 
 //-CRE-
 
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -72,6 +73,9 @@ namespace Glass.Mapper.Configuration
         /// <param name="property">The property.</param>
         public virtual void AddProperty(AbstractPropertyConfiguration property)
         {
+            if(_properties.Any(x=>x.PropertyInfo.Name == property.PropertyInfo.Name))
+                throw new MapperException("You can not have duplicate mappings for properties. Property Name: {0}  Type: {0}".Formatted(property.PropertyInfo.Name, this.Type.Name));
+
             if(property != null)
                 _properties.Add(property);
         }
@@ -111,6 +115,11 @@ namespace Glass.Mapper.Configuration
         
         }
 
+        /// <summary>
+        /// Autoes the map properties.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
         public virtual IEnumerable<AbstractPropertyConfiguration> AutoMapProperties(Type type)
         {
             BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance |
@@ -129,6 +138,10 @@ namespace Glass.Mapper.Configuration
             {
                 if (Properties.All(x => x.PropertyInfo != property))
                 {
+                    //skipped already mapped properties
+                    if(_properties.Any(x=>x.PropertyInfo.Name == property.Name))
+                        continue;
+
                     var propConfig = AutoMapProperty(property);
                     if (propConfig != null)
                         yield return propConfig;
@@ -147,6 +160,7 @@ namespace Glass.Mapper.Configuration
         }
     }
 }
+
 
 
 

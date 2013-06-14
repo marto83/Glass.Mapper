@@ -16,6 +16,7 @@
 */ 
 //-CRE-
 
+
 using System;
 using System.Linq;
 using FluentAssertions;
@@ -34,14 +35,22 @@ namespace Glass.Mapper.Umb.Tests.Configuration.Attributes
         [Test]
         public void Does_UmbracoTypeAttribute_Extend_AbstractClassAttribute()
         {
-            typeof(AbstractTypeAttribute).IsAssignableFrom(typeof(UmbracoTypeAttribute)).Should().BeTrue();
+            //Assign
+            var type = typeof(AbstractTypeAttribute);
+            //Act
+            //Assert
+            type.IsAssignableFrom(typeof(UmbracoTypeAttribute)).Should().BeTrue();
         }
 
         [Test]
         [TestCase("ContentTypeAlias")]
+        [TestCase("ContentTypeName")]
         public void Does_UmbracoTypeAttribute_Have_Properties(string propertyName)
         {
+            //Assign
             var properties = typeof(UmbracoTypeAttribute).GetProperties();
+            //Act
+            //Assert
             properties.Any(x => x.Name == propertyName).Should().BeTrue();
         }
 
@@ -53,21 +62,16 @@ namespace Glass.Mapper.Umb.Tests.Configuration.Attributes
             //Assign
             var attr = new UmbracoTypeAttribute();
             var config = new UmbracoTypeConfiguration();
-            var type = typeof (StubClass);
-
-            var documentTypeIdExpected = "test";
-
+            var type = typeof(StubClass);
+            
             //Act
-            attr.ContentTypeAlias = "test";
             attr.Configure(type, config);
 
             //Assert
             config.Type.ShouldBeEquivalentTo(type);
-            config.ContentTypeAlias.ShouldBeEquivalentTo(documentTypeIdExpected);
         }
 
         [Test]
-        [ExpectedException(typeof(ConfigurationException))]
         public void Configure_ConfigurationIsIncorrectType_ExceptionThrown()
         {
             //Assign
@@ -76,13 +80,13 @@ namespace Glass.Mapper.Umb.Tests.Configuration.Attributes
             var type = typeof(StubClass);
             
             //Act
-            attr.Configure(type, config);
 
             //Assert
+            attr.Invoking(a => a.Configure(type, config)).ShouldThrow<ConfigurationException>();
         }
 
         [Test]
-        public void Configure_AttributeHasTemplateId_TemplateIdSetOnConfig()
+        public void Configure_AttributeHasContentTypeAlias_ContentTypeAliasSetOnConfig()
         {
             //Assign
             var attr = new UmbracoTypeAttribute();
@@ -100,6 +104,26 @@ namespace Glass.Mapper.Umb.Tests.Configuration.Attributes
             config.Type.ShouldBeEquivalentTo(type);
             config.ContentTypeAlias.ShouldBeEquivalentTo(contentTypeAliasExpected);
         }
+
+        [Test]
+        public void Configure_AttributeHasContentTypeName_ContentTypeNameSetOnConfig()
+        {
+            //Assign
+            var attr = new UmbracoTypeAttribute();
+            var config = new UmbracoTypeConfiguration();
+            var type = typeof(StubClass);
+
+            var contentTypeNameExpected = "test";
+
+            attr.ContentTypeName = contentTypeNameExpected;
+
+            //Act
+            attr.Configure(type, config);
+
+            //Assert
+            config.Type.ShouldBeEquivalentTo(type);
+            config.ContentTypeName.ShouldBeEquivalentTo(contentTypeNameExpected);
+        }
         
         #endregion
 
@@ -113,6 +137,7 @@ namespace Glass.Mapper.Umb.Tests.Configuration.Attributes
         #endregion
     }
 }
+
 
 
 

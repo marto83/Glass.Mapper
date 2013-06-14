@@ -1,7 +1,25 @@
-﻿using System;
+/*
+   Copyright 2012 Michael Edwards
+ 
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ 
+*/ 
+//-CRE-
+using System;
 using System.Linq;
 using Glass.Mapper.Umb.Configuration;
 using Umbraco.Core.Models;
+using Umbraco.Core.Persistence;
 using Umbraco.Core.Services;
 
 namespace Glass.Mapper.Umb
@@ -39,6 +57,19 @@ namespace Glass.Mapper.Umb
             : base(context ?? Context.Default)
         {
             ContentService = contentService;
+        }
+
+        /// <summary>
+        /// Gets the home item.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="isLazy">if set to <c>true</c> [is lazy].</param>
+        /// <param name="inferType">if set to <c>true</c> [infer type].</param>
+        /// <returns></returns>
+        public T GetHomeItem<T>(bool isLazy = false, bool inferType = false) where T : class
+        {
+            var item = ContentService.GetChildren(-1).FirstOrDefault();
+            return CreateType(typeof(T), item, isLazy, inferType) as T;
         }
 
         /// <summary>
@@ -355,3 +386,4 @@ namespace Glass.Mapper.Umb
         }
     }
 }
+

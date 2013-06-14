@@ -16,6 +16,7 @@
 */ 
 //-CRE-
 
+
 namespace Glass.Mapper.Umb.Configuration
 {
     /// <summary>
@@ -80,10 +81,6 @@ namespace Glass.Mapper.Umb.Configuration
         /// </summary>
         FolderBrowser,
         /// <summary>
-        /// The label
-        /// </summary>
-        Label,
-        /// <summary>
         /// The media picker
         /// </summary>
         MediaPicker,
@@ -117,6 +114,7 @@ namespace Glass.Mapper.Umb.Configuration
         Upload,
     }
 }
+
 
 
 

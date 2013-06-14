@@ -53,6 +53,8 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -69,6 +71,7 @@
     <Compile Include="Configuration\Attributes\SitecoreAttributeConfigurationLoader.cs" />
     <Compile Include="Configuration\Attributes\SitecoreChildrenAttribute.cs" />
     <Compile Include="Configuration\Attributes\SitecoreFieldFieldValueAttribute.cs" />
+    <Compile Include="Configuration\Attributes\SitecoreIgnoreAttribute.cs" />
     <Compile Include="Configuration\Attributes\SitecoreQueryAttribute.cs" />
     <Compile Include="Configuration\Attributes\SitecoreTypeAttribute.cs" />
     <Compile Include="Configuration\Attributes\SitecoreFieldAttribute.cs" />
@@ -78,6 +81,7 @@
     <Compile Include="Configuration\Attributes\SitecoreNodeAttribute.cs" />
     <Compile Include="Configuration\Attributes\SitecoreParentAttribute.cs" />
     <Compile Include="Configuration\Fluent\AbstractPropertyBuilder.cs" />
+    <Compile Include="Configuration\Fluent\SitecoreIgnore.cs" />
     <Compile Include="Configuration\SitecoreFieldFieldValueConfiguration.cs" />
     <Compile Include="Configuration\Fluent\SitecoreFluentConfigurationLoader.cs" />
     <Compile Include="Configuration\Fluent\ISitecoreType.cs" />
@@ -90,13 +94,14 @@
     <Compile Include="Configuration\Fluent\SitecoreLinked.cs" />
     <Compile Include="Configuration\Fluent\SitecoreParent.cs" />
     <Compile Include="Configuration\Fluent\SitecoreQuery.cs" />
-    <Compile Include="Configuration\SitecoreChildrenConfiguration.cs" />
+    <Compile Include="Configuration\Fluent\SitecoreChildrenConfiguration.cs" />
     <Compile Include="Configuration\SitecoreFieldConfiguration.cs" />
     <Compile Include="Configuration\SitecoreFieldSettings.cs" />
     <Compile Include="Configuration\SitecoreFieldType.cs" />
     <Compile Include="Configuration\SitecoreGlassConfiguration.cs" />
     <Compile Include="Configuration\SitecoreGlassConfigurationFactory.cs" />
     <Compile Include="Configuration\SitecoreIdConfiguration.cs" />
+    <Compile Include="Configuration\SitecoreIgnoreConfiguration.cs" />
     <Compile Include="Configuration\SitecoreInfoConfiguration.cs" />
     <Compile Include="Configuration\SitecoreInfoType.cs" />
     <Compile Include="Configuration\SitecoreInfoUrlOptions.cs" />
@@ -107,6 +112,7 @@
     <Compile Include="Configuration\SitecoreQueryConfiguration.cs" />
     <Compile Include="Configuration\SitecoreTypeConfiguration.cs" />
     <Compile Include="DataMappers\AbstractSitecoreFieldMapper.cs" />
+    <Compile Include="DataMappers\SitecoreIgnoreMapper.cs" />
     <Compile Include="DataMappers\SitecoreItemMapper.cs" />
     <Compile Include="DataMappers\SitecoreFieldLongMapper.cs" />
     <Compile Include="DataMappers\SitecoreFieldIntegerMapper.cs" />
@@ -151,11 +157,15 @@
     <Compile Include="Fields\TriState.cs" />
     <Compile Include="GlassHtml.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="IGlassHtml.cs" />
     <Compile Include="ISitecoreContext.cs" />
     <Compile Include="ISitecoreService.cs" />
     <Compile Include="ItemEditing.cs" />
     <Compile Include="ItemExtensions.cs" />
     <Compile Include="LazyItemEnumerable.cs" />
+    <Compile Include="Pipelines\ConfigurationResolver\TemplateInferredTypeTask.cs" />
+    <Compile Include="Pipelines\Initialise\CodeFirstInitialise.cs" />
+    <Compile Include="Pipelines\ObjectConstruction\CreateDynamicTask.cs" />
     <Compile Include="Pipelines\Response\GetModel.cs" />
     <Compile Include="Profilers\SitecoreProfiler.cs" />
     <Compile Include="RenderField\AbstractParameters.cs" />
@@ -169,6 +179,8 @@
     <Compile Include="SitecoreService.cs" />
     <Compile Include="SitecoreTypeSavingContext.cs" />
     <Compile Include="Utilities.cs" />
+    <Compile Include="Web\Mvc\GlassView.cs" />
+    <Compile Include="Web\Mvc\HtmlHelperExtensions.cs" />
     <Compile Include="Web\Ui\AbstractGlassPage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -193,7 +205,6 @@
   <ItemGroup>
     <Folder Include="Pipelines\ContentResolver\" />
     <Folder Include="Pipelines\MappingPipeline\" />
-    <Folder Include="Pipelines\ObjectConstruction\" />
     <Folder Include="Pipelines\TypeResolver\" />
     <Folder Include="Proxies\" />
   </ItemGroup>

@@ -16,6 +16,7 @@
 */ 
 //-CRE-
 
+
 using System.Linq;
 using Glass.Mapper.Configuration;
 using Glass.Mapper.Configuration.Attributes;
@@ -45,16 +46,21 @@ namespace Glass.Mapper.Umb.Configuration.Attributes
         {
             var umbConfig = config as UmbracoTypeConfiguration;
 
-            //find the property configs that will be used to link a umbraco item to a class
-            umbConfig.IdConfig = config.Properties.FirstOrDefault(x => x is UmbracoIdConfiguration) as UmbracoIdConfiguration;
+	        if (umbConfig != null)
+	        {
+		        //find the property configs that will be used to link a umbraco item to a class
+		        umbConfig.IdConfig =
+			        config.Properties.FirstOrDefault(x => x is UmbracoIdConfiguration) as UmbracoIdConfiguration;
 
-            var umbInfos = config.Properties.Where(x => x is UmbracoInfoConfiguration).Cast<UmbracoInfoConfiguration>();
-            umbConfig.VersionConfig = umbInfos.FirstOrDefault(x => x.Type == UmbracoInfoType.Version);
+		        var umbInfos = config.Properties.Where(x => x is UmbracoInfoConfiguration).Cast<UmbracoInfoConfiguration>();
+		        umbConfig.VersionConfig = umbInfos.FirstOrDefault(x => x.Type == UmbracoInfoType.Version);
+	        }
 
-            base.ConfigCreated(config);
+	        base.ConfigCreated(config);
         }
     }
 }
+
 
 
 

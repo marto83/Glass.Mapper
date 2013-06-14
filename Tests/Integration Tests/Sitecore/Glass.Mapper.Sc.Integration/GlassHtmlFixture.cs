@@ -16,6 +16,7 @@
 */ 
 //-CRE-
 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,9 +42,9 @@ namespace Glass.Mapper.Sc.Integration
             string targetPath = "/sitecore/content/Tests/GlassHtml/MakeEditable/Target";
 
             var db = Sitecore.Configuration.Factory.GetDatabase("master");
-            var context = Context.Create(DependencyResolver.CreateStandardResolver());
+            var context = Context.Create(Utilities.CreateStandardResolver());
             context.Load(new SitecoreAttributeConfigurationLoader("Glass.Mapper.Sc.Integration"));
-            var service = new SitecoreService(db);
+            var service = new SitecoreContext(db);
 
             var html = new GlassHtml(service);
             
@@ -72,7 +73,12 @@ namespace Glass.Mapper.Sc.Integration
             Sitecore.Context.Site = siteContext;
 
             //Act
-            var result =  html.Editable(model, x => x.StringField);
+            string result;
+
+            using (new SecurityDisabler())
+            {
+                result = html.Editable(model, x => x.StringField);
+            }
 
             //Assert
             Assert.IsTrue(result.Contains(fieldValue));
@@ -88,9 +94,9 @@ namespace Glass.Mapper.Sc.Integration
             string targetPath = "/sitecore/content/Tests/GlassHtml/MakeEditable/Target";
 
             var db = Sitecore.Configuration.Factory.GetDatabase("master");
-            var context = Context.Create(DependencyResolver.CreateStandardResolver());
+            var context = Context.Create(Utilities.CreateStandardResolver());
             context.Load(new SitecoreAttributeConfigurationLoader("Glass.Mapper.Sc.Integration"));
-            var service = new SitecoreService(db);
+            var service = new SitecoreContext(db);
 
             var html = new GlassHtml(service);
 
@@ -136,9 +142,9 @@ namespace Glass.Mapper.Sc.Integration
             string targetPath = "/sitecore/content/Tests/GlassHtml/MakeEditable/Target";
 
             var db = Sitecore.Configuration.Factory.GetDatabase("master");
-            var context = Context.Create(DependencyResolver.CreateStandardResolver());
+            var context = Context.Create(Utilities.CreateStandardResolver());
             context.Load(new SitecoreAttributeConfigurationLoader("Glass.Mapper.Sc.Integration"));
-            var service = new SitecoreService(db);
+            var service = new SitecoreContext(db);
 
             var html = new GlassHtml(service);
 
@@ -167,8 +173,12 @@ namespace Glass.Mapper.Sc.Integration
             Sitecore.Context.Site = siteContext;
 
             //Act
-            var result = html.Editable(model, x => x.SubStub.StringField);
+             string result;
 
+            using (new SecurityDisabler())
+            {
+                result = html.Editable(model, x => x.SubStub.StringField);
+            }
             //Assert
             Assert.IsTrue(result.Contains(fieldValue));
             //this is the webedit class
@@ -183,9 +193,9 @@ namespace Glass.Mapper.Sc.Integration
             string targetPath = "/sitecore/content/Tests/GlassHtml/MakeEditable/Target";
 
             var db = Sitecore.Configuration.Factory.GetDatabase("master");
-            var context = Context.Create(DependencyResolver.CreateStandardResolver());
+            var context = Context.Create(Utilities.CreateStandardResolver());
             context.Load(new SitecoreAttributeConfigurationLoader("Glass.Mapper.Sc.Integration"));
-            var service = new SitecoreService(db);
+            var service = new SitecoreContext(db);
 
             var html = new GlassHtml(service);
 
@@ -231,9 +241,9 @@ namespace Glass.Mapper.Sc.Integration
             string targetPath = "/sitecore/content/Tests/GlassHtml/MakeEditable/Target";
 
             var db = Sitecore.Configuration.Factory.GetDatabase("master");
-            var context = Context.Create(DependencyResolver.CreateStandardResolver());
+            var context = Context.Create(Utilities.CreateStandardResolver());
             context.Load(new SitecoreAttributeConfigurationLoader("Glass.Mapper.Sc.Integration"));
-            var service = new SitecoreService(db);
+            var service = new SitecoreContext(db);
 
             var html = new GlassHtml(service);
 
@@ -262,8 +272,12 @@ namespace Glass.Mapper.Sc.Integration
             Sitecore.Context.Site = siteContext;
 
             //Act
-            var result = html.Editable(model, x => x.EnumerableSubStub.First().StringField);
+            string result;
 
+            using (new SecurityDisabler())
+            {
+                result = html.Editable(model, x => x.EnumerableSubStub.First().StringField);
+            }
             //Assert
             Assert.IsTrue(result.Contains(fieldValue));
             //this is the webedit class
@@ -278,9 +292,9 @@ namespace Glass.Mapper.Sc.Integration
             string targetPath = "/sitecore/content/Tests/GlassHtml/MakeEditable/Target";
 
             var db = Sitecore.Configuration.Factory.GetDatabase("master");
-            var context = Context.Create(DependencyResolver.CreateStandardResolver());
+            var context = Context.Create(Utilities.CreateStandardResolver());
             context.Load(new SitecoreAttributeConfigurationLoader("Glass.Mapper.Sc.Integration"));
-            var service = new SitecoreService(db);
+            var service = new SitecoreContext(db);
 
             var html = new GlassHtml(service);
 
@@ -327,9 +341,9 @@ namespace Glass.Mapper.Sc.Integration
             string targetPath = "/sitecore/content/Tests/GlassHtml/MakeEditable/Target";
 
             var db = Sitecore.Configuration.Factory.GetDatabase("master");
-            var context = Context.Create(DependencyResolver.CreateStandardResolver());
+            var context = Context.Create(Utilities.CreateStandardResolver());
             context.Load(new SitecoreAttributeConfigurationLoader("Glass.Mapper.Sc.Integration"));
-            var service = new SitecoreService(db);
+            var service = new SitecoreContext(db);
 
             var html = new GlassHtml(service);
 
@@ -358,8 +372,12 @@ namespace Glass.Mapper.Sc.Integration
             Sitecore.Context.Site = siteContext;
 
             //Act
-            var result = html.Editable(model, x => x.StringField);
+             string result;
 
+            using (new SecurityDisabler())
+            {
+                result = html.Editable(model, x => x.StringField);
+            }
             //Assert
             Assert.IsTrue(result.Contains(fieldValue));
             //this is the webedit class
@@ -374,9 +392,9 @@ namespace Glass.Mapper.Sc.Integration
             string targetPath = "/sitecore/content/Tests/GlassHtml/MakeEditable/Target";
 
             var db = Sitecore.Configuration.Factory.GetDatabase("master");
-            var context = Context.Create(DependencyResolver.CreateStandardResolver());
+            var context = Context.Create(Utilities.CreateStandardResolver());
             context.Load(new SitecoreAttributeConfigurationLoader("Glass.Mapper.Sc.Integration"));
-            var service = new SitecoreService(db);
+            var service = new SitecoreContext(db);
 
             var html = new GlassHtml(service);
 
@@ -422,9 +440,9 @@ namespace Glass.Mapper.Sc.Integration
             string targetPath = "/sitecore/content/Tests/GlassHtml/MakeEditable/Target";
 
             var db = Sitecore.Configuration.Factory.GetDatabase("master");
-            var context = Context.Create(DependencyResolver.CreateStandardResolver());
+            var context = Context.Create(Utilities.CreateStandardResolver());
             context.Load(new SitecoreAttributeConfigurationLoader("Glass.Mapper.Sc.Integration"));
-            var service = new SitecoreService(db);
+            var service = new SitecoreContext(db);
 
             var html = new GlassHtml(service);
 
@@ -453,8 +471,12 @@ namespace Glass.Mapper.Sc.Integration
             Sitecore.Context.Site = siteContext;
 
             //Act
-            var result = html.Editable(model, x => x.SubStub.StringField);
+             string result;
 
+            using (new SecurityDisabler())
+            {
+                 result = html.Editable(model, x => x.SubStub.StringField);
+            }
             //Assert
             Assert.IsTrue(result.Contains(fieldValue));
             //this is the webedit class
@@ -469,9 +491,9 @@ namespace Glass.Mapper.Sc.Integration
             string targetPath = "/sitecore/content/Tests/GlassHtml/MakeEditable/Target";
 
             var db = Sitecore.Configuration.Factory.GetDatabase("master");
-            var context = Context.Create(DependencyResolver.CreateStandardResolver());
+            var context = Context.Create(Utilities.CreateStandardResolver());
             context.Load(new SitecoreAttributeConfigurationLoader("Glass.Mapper.Sc.Integration"));
-            var service = new SitecoreService(db);
+            var service = new SitecoreContext(db);
 
             var html = new GlassHtml(service);
 
@@ -517,9 +539,9 @@ namespace Glass.Mapper.Sc.Integration
             string targetPath = "/sitecore/content/Tests/GlassHtml/MakeEditable/Target";
 
             var db = Sitecore.Configuration.Factory.GetDatabase("master");
-            var context = Context.Create(DependencyResolver.CreateStandardResolver());
+            var context = Context.Create(Utilities.CreateStandardResolver());
             context.Load(new SitecoreAttributeConfigurationLoader("Glass.Mapper.Sc.Integration"));
-            var service = new SitecoreService(db);
+            var service = new SitecoreContext(db);
 
             var html = new GlassHtml(service);
 
@@ -548,8 +570,12 @@ namespace Glass.Mapper.Sc.Integration
             Sitecore.Context.Site = siteContext;
 
             //Act
-            var result = html.Editable(model, x => x.EnumerableSubStub.First().StringField);
+             string result;
 
+            using (new SecurityDisabler())
+            {
+                result = html.Editable(model, x => x.EnumerableSubStub.First().StringField);
+            }
             //Assert
             Assert.IsTrue(result.Contains(fieldValue));
             //this is the webedit class
@@ -564,9 +590,9 @@ namespace Glass.Mapper.Sc.Integration
             string targetPath = "/sitecore/content/Tests/GlassHtml/MakeEditable/Target";
 
             var db = Sitecore.Configuration.Factory.GetDatabase("master");
-            var context = Context.Create(DependencyResolver.CreateStandardResolver());
+            var context = Context.Create(Utilities.CreateStandardResolver());
             context.Load(new SitecoreAttributeConfigurationLoader("Glass.Mapper.Sc.Integration"));
-            var service = new SitecoreService(db);
+            var service = new SitecoreContext(db);
 
             var html = new GlassHtml(service);
 
@@ -596,8 +622,12 @@ namespace Glass.Mapper.Sc.Integration
 
 
             //Act
-            var result = html.Editable(model, x => x.EnumerableSubStub.First().StringField);
+             string result;
 
+            using (new SecurityDisabler())
+            {
+                result = html.Editable(model, x => x.EnumerableSubStub.First().StringField);
+            }
             //Assert
             Assert.IsTrue(result.Contains(fieldValue));
             //this is the webedit class
@@ -612,9 +642,9 @@ namespace Glass.Mapper.Sc.Integration
             string targetPath = "/sitecore/content/Tests/GlassHtml/MakeEditable/Target";
 
             var db = Sitecore.Configuration.Factory.GetDatabase("master");
-            var context = Context.Create(DependencyResolver.CreateStandardResolver());
+            var context = Context.Create(Utilities.CreateStandardResolver());
             context.Load(new SitecoreAttributeConfigurationLoader("Glass.Mapper.Sc.Integration"));
-            var service = new SitecoreService(db);
+            var service = new SitecoreContext(db);
 
             var html = new GlassHtml(service);
 
@@ -643,11 +673,17 @@ namespace Glass.Mapper.Sc.Integration
             Sitecore.Context.Site = siteContext;
 
             //Act
-            var result = html.Editable(model, x => x.StringField, x => x.StringField);
 
+            string result;
+
+            using (new SecurityDisabler())
+            {
+                 result = html.Editable(model, x => x.StringField, x => x.StringField);
+            }
             //Assert
             Assert.IsTrue(result.Contains(fieldValue));
             //this is the webedit class
+
             Assert.IsTrue(result.Contains("scWebEditInput"));
             Console.WriteLine("result " + result);
         }
@@ -659,9 +695,9 @@ namespace Glass.Mapper.Sc.Integration
             string targetPath = "/sitecore/content/Tests/GlassHtml/MakeEditable/Target";
 
             var db = Sitecore.Configuration.Factory.GetDatabase("master");
-            var context = Context.Create(DependencyResolver.CreateStandardResolver());
+            var context = Context.Create(Utilities.CreateStandardResolver());
             context.Load(new SitecoreAttributeConfigurationLoader("Glass.Mapper.Sc.Integration"));
-            var service = new SitecoreService(db);
+            var service = new SitecoreContext(db);
 
             var html = new GlassHtml(service);
 
@@ -690,8 +726,12 @@ namespace Glass.Mapper.Sc.Integration
             Sitecore.Context.Site = siteContext;
 
             //Act
-            var result = html.Editable(model, x => x.StringField, x => x.StringField);
+             string result;
 
+            using (new SecurityDisabler())
+            {
+                result = html.Editable(model, x => x.StringField, x => x.StringField);
+            }
             //Assert
             Assert.AreEqual(fieldValue, result);
             //this is the webedit class
@@ -707,9 +747,9 @@ namespace Glass.Mapper.Sc.Integration
             string targetPath = "/sitecore/content/Tests/GlassHtml/MakeEditable/Target";
 
             var db = Sitecore.Configuration.Factory.GetDatabase("master");
-            var context = Context.Create(DependencyResolver.CreateStandardResolver());
+            var context = Context.Create(Utilities.CreateStandardResolver());
             context.Load(new SitecoreAttributeConfigurationLoader("Glass.Mapper.Sc.Integration"));
-            var service = new SitecoreService(db);
+            var service = new SitecoreContext(db);
 
             var html = new GlassHtml(service);
 
@@ -738,8 +778,12 @@ namespace Glass.Mapper.Sc.Integration
             Sitecore.Context.Site = siteContext;
 
             //Act
-            var result = html.Editable(model, x => x.StringFieldId, x => x.StringFieldId);
+             string result;
 
+            using (new SecurityDisabler())
+            {
+                result = html.Editable(model, x => x.StringFieldId, x => x.StringFieldId);
+            }
             //Assert
             Assert.IsTrue(result.Contains(fieldValue));
             //this is the webedit class
@@ -754,9 +798,9 @@ namespace Glass.Mapper.Sc.Integration
             string targetPath = "/sitecore/content/Tests/GlassHtml/MakeEditable/Target";
 
             var db = Sitecore.Configuration.Factory.GetDatabase("master");
-            var context = Context.Create(DependencyResolver.CreateStandardResolver());
+            var context = Context.Create(Utilities.CreateStandardResolver());
             context.Load(new SitecoreAttributeConfigurationLoader("Glass.Mapper.Sc.Integration"));
-            var service = new SitecoreService(db);
+            var service = new SitecoreContext(db);
 
             var html = new GlassHtml(service);
 
@@ -872,6 +916,7 @@ namespace Glass.Mapper.Sc.Integration
 
     }
 }
+
 
 
 

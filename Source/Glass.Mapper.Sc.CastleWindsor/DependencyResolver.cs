@@ -16,10 +16,10 @@
 */ 
 //-CRE-
 
+
 using System.Collections;
 using Castle.Windsor;
 using System.Collections.Generic;
-using Glass.Mapper.Configuration;
 
 namespace Glass.Mapper.Sc.CastleWindsor
 {
@@ -28,47 +28,14 @@ namespace Glass.Mapper.Sc.CastleWindsor
     /// </summary>
     public class DependencyResolver : IDependencyResolver
     {
-
         /// <summary>
         /// Creates the standard resolver.
         /// </summary>
         /// <returns>IDependencyResolver.</returns>
-        public static IDependencyResolver CreateStandardResolver(GlassConfiguration config)
+        public static DependencyResolver CreateStandardResolver()
         {
-            IWindsorContainer container = new WindsorContainer();
-            container.Install(new SitecoreInstaller(config));
+            IWindsorContainer container = new WindsorContainer();           
             return new DependencyResolver(container);
-        }
-
-        /// <summary>
-        /// Creates the standard resolver.
-        /// </summary>
-        /// <returns>IDependencyResolver.</returns>
-        public static IDependencyResolver CreateStandardResolver()
-        {
-            return CreateStandardResolver(new GlassConfiguration());
-        }
-
-        //
-
-        /// <summary>
-        /// Creates the standard resolver.
-        /// </summary>
-        /// <returns>IDependencyResolver.</returns>
-        public static IDependencyResolver CreateCachingResolver(GlassConfiguration config)
-        {
-            IWindsorContainer container = new WindsorContainer();
-            container.Install(new SitecoreCachingInstaller(config));
-            return new DependencyResolver(container);
-        }
-
-        /// <summary>
-        /// Creates the standard resolver.
-        /// </summary>
-        /// <returns>IDependencyResolver.</returns>
-        public static IDependencyResolver CreateCachingResolver()
-        {
-            return CreateCachingResolver(new GlassConfiguration());
         }
 
         /// <summary>
@@ -111,6 +78,7 @@ namespace Glass.Mapper.Sc.CastleWindsor
         }
     }
 }
+
 
 
 
