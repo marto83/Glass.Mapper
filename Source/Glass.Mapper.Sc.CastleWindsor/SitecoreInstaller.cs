@@ -17,6 +17,7 @@
 //-CRE-
 
 
+using System.Linq;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -404,23 +405,23 @@ namespace Glass.Mapper.Sc.CastleWindsor
             container.Register(
                 Component.For<IObjectConstructionTask>().ImplementedBy<CreateDynamicTask>().LifestyleTransient()
                 );
-
+    
             //caching has two tasks, the resolver and the saver
             if (Config.EnableCaching)
             {
                 container.Register(
-                    Component.For<IObjectConstructionTask>().ImplementedBy<ObjectCachingResolverTask>()
+                    Component.For<IObjectConstructionTask>().ImplementedBy<ObjectCachingResolverTask>().LifestyleTransient()
                     );
 
                 //check to see if someone has added a cache
-                if (container.Resolve<IObjectCache>() == null)
+                if (!container.Kernel.GetAssignableHandlers(typeof(IObjectCache)).Any())
                 {
                     container.Register(
                         Component.For<IObjectCache>().ImplementedBy<MemoryObjectCache>().LifestyleSingleton()
                      );
                 }
                 //check to see if someone has added a cache key factory
-                if (container.Resolve<ICacheKeyFactory>() == null)
+                if (!container.Kernel.GetAssignableHandlers(typeof(ICacheKeyFactory)).Any())
                 {
                     container.Register(
                         Component.For<ICacheKeyFactory>().ImplementedBy<SitecoreCacheKeyFactory>().LifestyleTransient()
@@ -446,7 +447,7 @@ namespace Glass.Mapper.Sc.CastleWindsor
             if (Config.EnableCaching)
             {
                 container.Register(
-                    Component.For<IObjectConstructionTask>().ImplementedBy<ObjectCachingSaverTask>()
+                    Component.For<IObjectConstructionTask>().ImplementedBy<ObjectCachingSaverTask>().LifestyleTransient()
                     );
             }
         }

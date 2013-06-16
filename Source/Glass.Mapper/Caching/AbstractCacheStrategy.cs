@@ -15,7 +15,9 @@ namespace Glass.Mapper.Caching
     {
         public virtual bool CanCache(ObjectConstructionArgs args)
         {
-            return !(args.Result is ICacheIgnore);
+            //we don't want to cache lazy objects
+            //we also don't want to cache object explicitly detailed for exclusion
+            return !(args.Result is ICacheIgnore) && args.AbstractTypeCreationContext.IsLazy == false;
         }
     }
 }

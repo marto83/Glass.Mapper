@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Caching\SitecoreCacheKey.cs" />
+    <Compile Include="Caching\SitecoreCacheKeyFactory.cs" />
     <Compile Include="Caching\SitecoreObjectCache.cs" />
     <Compile Include="CodeFirst\FieldInfo.cs" />
     <Compile Include="CodeFirst\GlassDataProvider.cs" />
