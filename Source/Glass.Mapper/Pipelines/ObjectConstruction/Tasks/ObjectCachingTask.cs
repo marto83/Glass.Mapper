@@ -10,17 +10,13 @@ namespace Glass.Mapper.Pipelines.ObjectConstruction.Tasks
     public abstract class ObjectCachingTask : IObjectConstructionTask
     {
         private readonly ICacheKeyFactory _factory;
-        private IObjectCache _objectCache = new MemoryObjectCache();
 
-        public IObjectCache ObjectCache
-        {
-            get { return _objectCache; }
-            set { _objectCache = value; }
-        }
+        protected IObjectCache ObjectCache { get; private set; }
 
-        public ObjectCachingTask(ICacheKeyFactory factory)
+        public ObjectCachingTask(IObjectCache cache, ICacheKeyFactory factory)
         {
             _factory = factory;
+            ObjectCache = cache;
         }
 
         public void Execute(ObjectConstructionArgs args)

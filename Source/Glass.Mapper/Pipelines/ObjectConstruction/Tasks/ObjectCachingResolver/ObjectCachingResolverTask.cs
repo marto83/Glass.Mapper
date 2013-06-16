@@ -31,7 +31,8 @@ namespace Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingResolver
     public class ObjectCachingResolverTask : ObjectCachingTask
     {
 
-        public ObjectCachingResolverTask(ICacheKeyFactory factory):base(factory)
+        public ObjectCachingResolverTask(IObjectCache cache, ICacheKeyFactory factory)
+            :base(cache, factory)
         {
         }
 

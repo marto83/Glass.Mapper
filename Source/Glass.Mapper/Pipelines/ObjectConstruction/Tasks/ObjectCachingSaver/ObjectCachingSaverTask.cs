@@ -14,7 +14,8 @@ namespace Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingSaver
     {
         public AbstractCacheStrategy CacheStrategy { get; set; }
 
-        public ObjectCachingSaverTask(ICacheKeyFactory factory):base(factory)
+        public ObjectCachingSaverTask(IObjectCache cache, ICacheKeyFactory factory)
+            :base(cache, factory)
         {
             CacheStrategy = new BasicCacheStrategy();
         }

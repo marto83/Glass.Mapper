@@ -24,8 +24,7 @@ namespace Glass.Mapper.Tests.Pipelines.ObjectConstruction.Tasks.ObjectCachingSav
             _cache = Substitute.For<IObjectCache>();
             _keyFactory = Substitute.For<ICacheKeyFactory>();
             
-            _task = new ObjectCachingSaverTask(_keyFactory);
-            _task.ObjectCache = _cache;
+            _task = new ObjectCachingSaverTask(_cache, _keyFactory);
 
         }
 
