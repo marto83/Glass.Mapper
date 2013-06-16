@@ -17,12 +17,12 @@ namespace Glass.Mapper.Sc.Caching
         /// <summary>
         /// A cache key for the Sitecore CMS
         /// </summary>
-        public SitecoreCacheKey(Item item, object obj)
+        public SitecoreCacheKey(Item item, Type objectType)
         {
             Id = item.ID;
             RevisionId = item[RevisionField];
             Database = item.Database.Name;
-            ObjectType = obj.GetType();
+            ObjectType = objectType;
         }
 
 
