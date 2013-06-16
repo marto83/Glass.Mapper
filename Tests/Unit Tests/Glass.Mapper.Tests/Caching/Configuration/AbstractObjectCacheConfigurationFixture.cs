@@ -3,9 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Castle.MicroKernel.Registration;
-using Castle.Windsor;
-using Glass.Mapper.Caching.Configuration;
 using Glass.Mapper.Caching.ObjectCaching;
 using NUnit.Framework;
 

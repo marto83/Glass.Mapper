@@ -41,7 +41,7 @@ namespace Glass.Mapper.Tests.Caching.ObjectCaching
 
 
             //Assign
-            var abstractObjectCache = new MemoryObjectCache<int>(_cacheKeyResolver, _glassConfiguration);
+            var abstractObjectCache = new MemoryObjectCache(_cacheKeyResolver, _glassConfiguration);
 
             //Act
             abstractObjectCache.AddObject(args);
@@ -66,7 +66,7 @@ namespace Glass.Mapper.Tests.Caching.ObjectCaching
 
             _cacheKeyResolver.GetKey(args).Returns(key);
 
-            var abstractObjectCache = new MemoryObjectCache<int>(_cacheKeyResolver, _glassConfiguration);
+            var abstractObjectCache = new MemoryObjectCache(_cacheKeyResolver, _glassConfiguration);
             abstractObjectCache.AddObject(args);
             _cacheKeyResolver.GetKey(args).Returns(key);
             args.CacheKey = key;
@@ -83,7 +83,7 @@ namespace Glass.Mapper.Tests.Caching.ObjectCaching
         public void ExpectWhenTryToAddObjectAgain()
         {
             //Assign
-            var abstractObjectCache = new MemoryObjectCache<int>(_cacheKeyResolver, _glassConfiguration);
+            var abstractObjectCache = new MemoryObjectCache(_cacheKeyResolver, _glassConfiguration);
 
             var id = 3;
             var revisionId = 3;

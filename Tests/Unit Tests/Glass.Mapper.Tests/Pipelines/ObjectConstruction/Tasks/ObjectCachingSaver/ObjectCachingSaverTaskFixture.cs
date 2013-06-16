@@ -1,5 +1,4 @@
 ﻿using System;
-using Glass.Mapper.Caching.Configuration;
 using Glass.Mapper.Caching.ObjectCaching;
 using Glass.Mapper.Configuration;
 using Glass.Mapper.Pipelines;

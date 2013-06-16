@@ -4,23 +4,48 @@ using System.Linq;
 using System.Text;
 using Glass.Mapper.Caching;
 using Sitecore.Data;
+using Sitecore.Data.Items;
 
 namespace Glass.Mapper.Sc.Caching
 {
     /// <summary>
     /// 
     /// </summary>
-    public class SitecoreCacheKey : CacheKey<ID>
+    public class SitecoreCacheKey : ICacheKey
     {
+        public const string RevisionField = "__Revision";
         /// <summary>
         /// A cache key for the Sitecore CMS
         /// </summary>
-        /// <param name="id">The ID of the Sitecore Node</param>
-        /// <param name="revisionId">The revision of the Sitecore Node</param>
-        /// <param name="database">The Database the node is from</param>
-        public SitecoreCacheKey(ID id, ID revisionId, string database):base(id, revisionId, database)
+        public SitecoreCacheKey(Item item, object obj)
         {
-            
+            Id = item.ID;
+            RevisionId = item[RevisionField];
+            Database = item.Database.Name;
+            ObjectType = obj.GetType();
+        }
+
+
+        public Type ObjectType { get; private set; }
+
+        /// <summary>
+        /// The id of the content
+        /// </summary>
+        public ID Id { get; private set; }
+
+        /// <summary>
+        /// The version number of the content if any
+        /// </summary>
+        public string RevisionId { get; private set; }
+
+        /// <summary>
+        /// The database that the content had come form
+        /// </summary>
+        public string Database { get; private set; }
+
+        public string GetKey()
+        {
+            return "{0},{1},{2},{3}".Formatted(Id, RevisionId, Database, ObjectType);
         }
     }
 }

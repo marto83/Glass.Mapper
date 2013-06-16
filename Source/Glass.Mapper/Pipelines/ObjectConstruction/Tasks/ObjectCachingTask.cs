@@ -2,24 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Glass.Mapper.Caching;
 
 namespace Glass.Mapper.Pipelines.ObjectConstruction.Tasks
 {
-    public abstract class ObjectCachingTask : IObjectConstructionTask, IPipelineTask<ObjectCachingArgs>
+    public abstract class ObjectCachingTask : IObjectConstructionTask
     {
-        public abstract void Execute(ObjectCachingArgs args);
+        private readonly ICacheKeyFactory _factory;
+
+        public ObjectCachingTask(ICacheKeyFactory factory)
+        {
+            _factory = factory;
+        }
 
         public void Execute(ObjectConstructionArgs args)
         {
-            if (args is ObjectCachingArgs)
-            {
-                Execute(args as ObjectCachingArgs);
-            }
-            else
-            {
-                throw new ObjectConstructionException(
-                    "Expected args to be of type ObjectCachingArgs when using an object caching task");
-            }
+            var key = _factory.GetKey(args);
+
+            if(key != null)
+                Execute(args, key);
         }
+
+        public abstract void Execute(ObjectConstructionArgs args, ICacheKey cacheKey);
+
     }
 }

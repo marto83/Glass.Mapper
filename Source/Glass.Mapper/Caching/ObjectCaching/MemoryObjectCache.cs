@@ -4,35 +4,39 @@ using System.Linq;
 using System.Runtime.Caching;
 using System.Text;
 using Glass.Mapper.Configuration;
+using Glass.Mapper.Pipelines.ObjectConstruction;
 
 namespace Glass.Mapper.Caching.ObjectCaching
 {
-    public class MemoryObjectCache<TIdType> : ObjectCache<TIdType>
+    public class MemoryObjectCache : AbstractObjectCache
     {
+
         private volatile MemoryCache _objectCache;
 
-        public MemoryObjectCache(AbstractCacheKeyResolver<TIdType> cacheKeyResolver, GlassConfiguration glassConfiguration)
-            : base(cacheKeyResolver, glassConfiguration)
+        public TimeSpan SlidingExpiration { get; set; }
+
+        public MemoryObjectCache()
         {
-            _objectCache = new MemoryCache(GlassConfiguration.CacheName);
+            _objectCache = new MemoryCache(CacheName);
+            SlidingExpiration = new TimeSpan(0, 2, 0, 0);
         }
 
-        protected override bool InternalContansObject(string objectKey)
+        public override bool ContainsObject(ICacheKey cacheKey)
         {
-            return _objectCache.Contains(objectKey);
+            return _objectCache.Contains(cacheKey.GetKey());
         }
 
-        protected override void InternalAddObject(string objectKey, object objectForCaching)
+        protected override void InternalAddObject(ICacheKey cacheKey, object objectForCaching)
         {
             var policy = new CacheItemPolicy();
-            policy.SlidingExpiration = new TimeSpan(0, 2, 0, 0);
+            policy.SlidingExpiration = SlidingExpiration;
 
-            _objectCache.Set(objectKey, objectForCaching, policy);
+            _objectCache.Set(cacheKey.GetKey(), objectForCaching, policy);
         }
 
-        protected override object InternalGetObject(string objectKey)
+        public override object GetObject(ICacheKey cacheKey)
         {
-            return _objectCache.Get(objectKey);
+            return _objectCache.Get(cacheKey.GetKey());
         }
     }
 }
