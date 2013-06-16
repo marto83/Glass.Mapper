@@ -9,14 +9,14 @@ namespace Glass.Mapper.Caching.ObjectCaching
     /// <summary>
     /// 
     /// </summary>
-    public interface IAbstractObjectCache
+    public interface IObjectCache
     {
         /// <summary>
         /// Checks the Cache for the request object
         /// </summary>
         /// <param name="args">The arguments for the request</param>
         /// <returns>whether the object is in the cache</returns>
-        bool ContansObject(ObjectCachingArgs args);
+        bool ContainsObject(ObjectCachingArgs args);
 
         /// <summary>
         /// Gets an object form Cache

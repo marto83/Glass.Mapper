@@ -11,7 +11,7 @@ using Sitecore.Data;
 
 namespace Glass.Mapper.Sc.Caching
 {
-    public class SitecoreObjectCache : AbstractObjectCache<ID>
+    public class SitecoreObjectCache : ObjectCache<ID>
     {
         private readonly Cache _objectCache;
         private readonly TimeSpan _cacheItemSlidingExpiration;

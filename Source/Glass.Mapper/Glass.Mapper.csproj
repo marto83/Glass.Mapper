@@ -49,12 +49,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Castle.Core.3.2.0\lib\net40-client\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Windsor">
-      <HintPath>..\Glass.Mapper.Sc.CastleWindsor\bin\Debug - Aaron\Castle.Windsor.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\Tests\Unit Tests\Glass.Mapper.Tests\bin\Debug - Aaron\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Caching" />
@@ -68,17 +62,15 @@
   <ItemGroup>
     <Compile Include="AbstractDataMapper.cs" />
     <Compile Include="AbstractDataMappingContext.cs" />
-    <Compile Include="AbstractDependencyInstaller.cs" />
     <Compile Include="AbstractService.cs" />
     <Compile Include="AbstractTypeSavingContext.cs" />
     <Compile Include="Caching\CacheKey.cs" />
-    <Compile Include="Caching\Configuration\AbstractObjectCacheConfiguration.cs" />
     <Compile Include="Caching\Exceptions\DuplicatedKeyObjectCacheException.cs" />
     <Compile Include="Caching\Exceptions\ObjectCacheException.cs" />
     <Compile Include="Caching\ICacheKey.cs" />
     <Compile Include="Caching\ObjectCaching\AbstractCacheKeyResolver.cs" />
-    <Compile Include="Caching\ObjectCaching\AbstractObjectCache.cs" />
-    <Compile Include="Caching\ObjectCaching\IAbstractObjectCache.cs" />
+    <Compile Include="Caching\ObjectCaching\ObjectCache.cs" />
+    <Compile Include="Caching\ObjectCaching\IObjectCache.cs" />
     <Compile Include="Caching\ObjectCaching\MemoryObjectCache.cs" />
     <Compile Include="ActivationManager.cs" />
     <Compile Include="Configuration\AbstractTypeConfiguration.cs" />

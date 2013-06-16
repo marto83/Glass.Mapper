@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Glass.Mapper.Caching.Configuration;
 using Glass.Mapper.Configuration;
 using Glass.Mapper.Pipelines.DataMapperResolver;
 
@@ -57,6 +56,7 @@ namespace Glass.Mapper
         {
             Contexts = new Dictionary<string, Context>();
         }
+
         /// <summary>
         /// Creates a Context and creates it as the default Context. This is assigned to the Default static property.
         /// </summary>
@@ -123,27 +123,6 @@ namespace Glass.Mapper
         /// </summary>
         public GlassConfiguration Configuration { get; set; }
 
-
-        private AbstractObjectCacheConfiguration _objectCacheConfiguration;
-
-        /// <summary>
-        /// The configuration for the Glass Cache
-        /// </summary>
-        public AbstractObjectCacheConfiguration ObjectCacheConfiguration
-        {
-            get
-            {
-                if (_objectCacheConfiguration == null)
-                {
-                    ConfigureCache();
-                }
-
-                return _objectCacheConfiguration;
-            }
-        }
-
-
-
         /// <summary>
         /// Prevents a default instance of the <see cref="Context"/> class from being created.
         /// </summary>
@@ -182,7 +161,7 @@ namespace Glass.Mapper
                 //first we have to add each type config to the collection
                 foreach (var typeConfig in typeConfigurations)
                 {
-                    
+
                     typeConfig.PerformAutoMap();
 
                     TypeConfigurations.Add(typeConfig.Type, typeConfig);
@@ -203,22 +182,22 @@ namespace Glass.Mapper
         /// <param name="properties">The properties.</param>
         /// <exception cref="System.NullReferenceException">Could not find data mapper for property {0} on type {1}
         ///                         .Formatted(property.PropertyInfo.Name,property.PropertyInfo.ReflectedType.FullName)</exception>
-        private void ProcessProperties(IEnumerable<AbstractPropertyConfiguration> properties )
+        private void ProcessProperties(IEnumerable<AbstractPropertyConfiguration> properties)
         {
             DataMapperResolver runner = new DataMapperResolver(DependencyResolver.ResolveAll<IDataMapperResolverTask>());
 
-            foreach(var property in properties)
+            foreach (var property in properties)
             {
 
                 DataMapperResolverArgs args = new DataMapperResolverArgs(this, property);
                 args.PropertyConfiguration = property;
                 args.DataMappers = DependencyResolver.ResolveAll<AbstractDataMapper>();
                 runner.Run(args);
-                if(args.Result == null)
+                if (args.Result == null)
                 {
                     throw new NullReferenceException(
                         "Could not find data mapper for property {0} on type {1}"
-                        .Formatted(property.PropertyInfo.Name,property.PropertyInfo.ReflectedType.FullName));
+                            .Formatted(property.PropertyInfo.Name, property.PropertyInfo.ReflectedType.FullName));
                 }
                 property.Mapper = args.Result;
             }
@@ -246,30 +225,13 @@ namespace Glass.Mapper
             //ME - I added the OrderByDescending in response to issue 53
             // raised on the Glass.Sitecore.Mapper project. Longest name should be compared first
             // to get the most specific interface
-            var interfaceType = type.GetInterfaces().OrderByDescending(x=>x.Name.Length).FirstOrDefault(x => name.Contains(x.Name));
+            var interfaceType =
+                type.GetInterfaces().OrderByDescending(x => x.Name.Length).FirstOrDefault(x => name.Contains(x.Name));
 
             if (interfaceType != null)
                 config = TypeConfigurations.ContainsKey(interfaceType) ? TypeConfigurations[interfaceType] : null;
 
             return config;
-        }
-
-        /// <summary>
-        /// Configures the Cache via dependency injection
-        /// </summary>
-        public void ConfigureCache()
-        {
-            _objectCacheConfiguration =
-                DependencyResolver.Resolve<AbstractObjectCacheConfiguration>();
-        }
-
-        /// <summary>
-        /// Manually sets the the Cache Configuration
-        /// </summary>
-        /// <param name="objectCacheConfiguration"></param>
-        public void ConfigureCache(AbstractObjectCacheConfiguration objectCacheConfiguration)
-        {
-            _objectCacheConfiguration = objectCacheConfiguration;
         }
     }
 }

@@ -62,7 +62,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Caching\Configuration\SitecoreObjectCacheConfiguration.cs" />
     <Compile Include="Caching\SitecoreCacheKey.cs" />
     <Compile Include="Caching\SitecoreObjectCache.cs" />
     <Compile Include="CodeFirst\FieldInfo.cs" />

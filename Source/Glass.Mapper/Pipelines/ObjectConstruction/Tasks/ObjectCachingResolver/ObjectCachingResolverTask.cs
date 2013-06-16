@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Glass.Mapper.Caching.ObjectCaching;
 
 namespace Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingResolver
 {
@@ -28,11 +29,18 @@ namespace Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingResolver
     /// </summary>
     public class ObjectCachingResolverTask : ObjectCachingTask
     {
+        private readonly IObjectCache _cache;
+
+        public ObjectCachingResolverTask(IObjectCache cache)
+        {
+            _cache = cache;
+        }
+
         public override void Execute(ObjectCachingArgs args)
         {
-            if (!args.Context.ObjectCacheConfiguration.ObjectCache.ContansObject(args)) return;
+            if (!_cache.ContainsObject(args)) return;
 
-            args.Result = args.Context.ObjectCacheConfiguration.ObjectCache.GetObject(args);
+            args.Result = _cache.GetObject(args);
 
             args.AbortPipeline();
         }

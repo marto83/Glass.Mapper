@@ -7,7 +7,7 @@ using Glass.Mapper.Configuration;
 
 namespace Glass.Mapper.Caching.ObjectCaching
 {
-    public abstract class AbstractObjectCache<TIdType> : IAbstractObjectCache
+    public abstract class ObjectCache<TIdType> : IObjectCache
     {
         protected AbstractCacheKeyResolver<TIdType> CacheKeyResolver;
         protected GlassConfiguration GlassConfiguration;
@@ -16,7 +16,7 @@ namespace Glass.Mapper.Caching.ObjectCaching
         protected abstract void InternalAddObject(string objectKey, object objectForCaching);
         protected abstract object InternalGetObject(string objectKey);
 
-        public bool ContansObject(Pipelines.ObjectConstruction.ObjectCachingArgs args)
+        public bool ContainsObject(Pipelines.ObjectConstruction.ObjectCachingArgs args)
         {
             return InternalContansObject(CacheKeyResolver.GetKey(args).ToString());
         }
@@ -38,7 +38,7 @@ namespace Glass.Mapper.Caching.ObjectCaching
             InternalAddObject(objectKey, args.Result);
         }
 
-        protected AbstractObjectCache(AbstractCacheKeyResolver<TIdType> cacheKeyResolver, GlassConfiguration glassConfiguration)
+        protected ObjectCache(AbstractCacheKeyResolver<TIdType> cacheKeyResolver, GlassConfiguration glassConfiguration)
         {
             CacheKeyResolver = cacheKeyResolver;
             GlassConfiguration = glassConfiguration;

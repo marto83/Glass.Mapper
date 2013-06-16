@@ -7,7 +7,7 @@ using Glass.Mapper.Configuration;
 
 namespace Glass.Mapper.Caching.ObjectCaching
 {
-    public class MemoryObjectCache<TIdType> : AbstractObjectCache<TIdType>
+    public class MemoryObjectCache<TIdType> : ObjectCache<TIdType>
     {
         private volatile MemoryCache _objectCache;
 

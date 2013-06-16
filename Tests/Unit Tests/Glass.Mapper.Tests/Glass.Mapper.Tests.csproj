@@ -48,7 +48,6 @@
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\..\Source\Glass.Mapper.Sc.CastleWindsor\bin\Debug - Aaron\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="NSubstitute, Version=1.5.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
     <Reference Include="NSubstitute, Version=1.6.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\NSubstitute.1.6.0.0\lib\NET40\NSubstitute.dll</HintPath>
