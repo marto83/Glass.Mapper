@@ -33,6 +33,7 @@ namespace Glass.Mapper.Sc.Caching
         /// </summary>
         public ID Id { get; private set; }
 
+
         /// <summary>
         /// The version number of the content if any
         /// </summary>

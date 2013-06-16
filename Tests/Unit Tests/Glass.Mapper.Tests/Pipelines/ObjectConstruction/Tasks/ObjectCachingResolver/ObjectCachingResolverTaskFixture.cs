@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Glass.Mapper.Caching;
-using Glass.Mapper.Caching.ObjectCaching;
-using Glass.Mapper.Configuration;
-using Glass.Mapper.Pipelines;
-using Glass.Mapper.Pipelines.ObjectConstruction;
-using Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingSaver;
+﻿using Glass.Mapper.Caching;
 using NSubstitute;
 using NUnit.Framework;
 using Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingResolver;

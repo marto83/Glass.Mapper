@@ -6,7 +6,7 @@ using System.Text;
 using Glass.Mapper.Configuration;
 using Glass.Mapper.Pipelines.ObjectConstruction;
 
-namespace Glass.Mapper.Caching.ObjectCaching
+namespace Glass.Mapper.Caching
 {
     public class MemoryObjectCache : IObjectCache
     {
@@ -33,6 +33,15 @@ namespace Glass.Mapper.Caching.ObjectCaching
             policy.SlidingExpiration = SlidingExpiration;
 
             _objectCache.Set(cacheKey.GetKey(), objectForCaching, policy);
+        }
+
+        public void ClearCache()
+        {
+            if (_objectCache != null)
+            {
+                _objectCache.Dispose();
+            }
+            _objectCache = new MemoryCache(CacheName);
         }
 
         public object GetObject(ICacheKey cacheKey)

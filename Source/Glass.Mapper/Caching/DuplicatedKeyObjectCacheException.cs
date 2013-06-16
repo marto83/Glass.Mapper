@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Glass.Mapper.Caching.Exceptions
+namespace Glass.Mapper.Caching
 {
     public class DuplicatedKeyObjectCacheException : ObjectCacheException
     {
