@@ -8,8 +8,9 @@ using Glass.Mapper.Pipelines.ObjectConstruction;
 
 namespace Glass.Mapper.Caching.ObjectCaching
 {
-    public class MemoryObjectCache : AbstractObjectCache
+    public class MemoryObjectCache : IObjectCache
     {
+        public const string CacheName = "0E08C19C-39EF-4990-A8C9-BD167334BF84";
 
         private volatile MemoryCache _objectCache;
 
@@ -21,12 +22,12 @@ namespace Glass.Mapper.Caching.ObjectCaching
             SlidingExpiration = new TimeSpan(0, 2, 0, 0);
         }
 
-        public override bool ContainsObject(ICacheKey cacheKey)
+        public bool ContainsObject(ICacheKey cacheKey)
         {
             return _objectCache.Contains(cacheKey.GetKey());
         }
 
-        protected override void InternalAddObject(ICacheKey cacheKey, object objectForCaching)
+        public void AddObject(ICacheKey cacheKey, object objectForCaching)
         {
             var policy = new CacheItemPolicy();
             policy.SlidingExpiration = SlidingExpiration;
@@ -34,7 +35,7 @@ namespace Glass.Mapper.Caching.ObjectCaching
             _objectCache.Set(cacheKey.GetKey(), objectForCaching, policy);
         }
 
-        public override object GetObject(ICacheKey cacheKey)
+        public object GetObject(ICacheKey cacheKey)
         {
             return _objectCache.Get(cacheKey.GetKey());
         }

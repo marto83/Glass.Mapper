@@ -30,9 +30,9 @@ namespace Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingResolver
     /// </summary>
     public class ObjectCachingResolverTask : ObjectCachingTask
     {
-        private readonly AbstractObjectCache _cache;
+        private readonly IObjectCache _cache;
 
-        public ObjectCachingResolverTask(AbstractObjectCache cache, ICacheKeyFactory factory):base(factory)
+        public ObjectCachingResolverTask(IObjectCache cache, ICacheKeyFactory factory):base(factory)
         {
             _cache = cache;
         }

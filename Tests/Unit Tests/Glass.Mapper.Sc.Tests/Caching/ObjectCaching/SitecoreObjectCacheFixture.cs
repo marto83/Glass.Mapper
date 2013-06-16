@@ -42,7 +42,7 @@ namespace Glass.Mapper.Sc.Tests.Caching.ObjectCaching
 
 
             //Assign
-            var abstractObjectCache = new SitecoreAbstractObjectCache(_cacheKeyResolver, new SitecoreGlassConfiguration());
+            var abstractObjectCache = new SitecoreObjectCache(_cacheKeyResolver, new SitecoreGlassConfiguration());
 
             //Act
             abstractObjectCache.AddObject(args);
@@ -67,7 +67,7 @@ namespace Glass.Mapper.Sc.Tests.Caching.ObjectCaching
 
             _cacheKeyResolver.GetKey(args).Returns(key);
 
-            var abstractObjectCache = new SitecoreAbstractObjectCache(_cacheKeyResolver, new SitecoreGlassConfiguration());
+            var abstractObjectCache = new SitecoreObjectCache(_cacheKeyResolver, new SitecoreGlassConfiguration());
             abstractObjectCache.AddObject(args);
             _cacheKeyResolver.GetKey(args).Returns(key);
             args.CacheKey = key;
@@ -84,7 +84,7 @@ namespace Glass.Mapper.Sc.Tests.Caching.ObjectCaching
         public void ExpectWhenTryToAddObjectAgain()
         {
             //Assign
-            var abstractObjectCache = new SitecoreAbstractObjectCache(_cacheKeyResolver, new SitecoreGlassConfiguration());
+            var abstractObjectCache = new SitecoreObjectCache(_cacheKeyResolver, new SitecoreGlassConfiguration());
 
             var id = new ID(new Guid("d1f6f2b8-93dd-477d-8089-c3639e713fab"));
             var revisionId = new ID(new Guid("d1f6f2b8-93dd-477d-8089-c3639e713fab"));

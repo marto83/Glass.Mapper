@@ -13,20 +13,22 @@ using Sitecore.Data;
 
 namespace Glass.Mapper.Sc.Caching
 {
-    public class SitecoreAbstractObjectCache : AbstractObjectCache
+    public class SitecoreObjectCache : IObjectCache
     {
         private readonly Cache _objectCache;
         private readonly TimeSpan _cacheItemSlidingExpiration;
 
+        public const string CacheName = "0E08C19C-39EF-4990-A8C9-BD167334BF84";
+
         public long CacheSize { get; private set; }
 
-        public SitecoreAbstractObjectCache()
+        public SitecoreObjectCache()
             : this(100)
         {
             
            
         }
-        public SitecoreAbstractObjectCache(long cacheSize)
+        public SitecoreObjectCache(long cacheSize)
         {
             CacheSize = cacheSize;
             _objectCache = Cache.GetNamedInstance(CacheName, CacheSize);
@@ -34,17 +36,17 @@ namespace Glass.Mapper.Sc.Caching
             _cacheItemSlidingExpiration = System.Web.Caching.Cache.NoSlidingExpiration;
         }
 
-        public override bool ContainsObject(ICacheKey cacheKey)
+        public  bool ContainsObject(ICacheKey cacheKey)
         {
             return _objectCache.ContainsKey(cacheKey.GetKey());
         }
 
-        protected override void InternalAddObject(ICacheKey cacheKey, object objectForCaching)
+        public  void AddObject(ICacheKey cacheKey, object objectForCaching)
         {
             _objectCache.Add(cacheKey.GetKey(), objectForCaching, 10, _cacheItemSlidingExpiration);
         }
 
-        public override object GetObject(ICacheKey cacheKey)
+        public  object GetObject(ICacheKey cacheKey)
         {
             return _objectCache.GetValue(cacheKey.GetKey());
         }

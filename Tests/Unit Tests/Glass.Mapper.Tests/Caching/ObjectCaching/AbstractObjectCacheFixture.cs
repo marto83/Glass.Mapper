@@ -39,7 +39,7 @@ namespace Glass.Mapper.Tests.Caching.ObjectCaching
         public void AbstractObjectCacheContainObject()
         {
             //Assign
-            var abstractObjectCache = new StubAbstractObjectCache(_cacheKeyResolver);
+            var abstractObjectCache = new StubObjectCache(_cacheKeyResolver);
 
             //Act
             abstractObjectCache.AddObject(_args);
@@ -53,7 +53,7 @@ namespace Glass.Mapper.Tests.Caching.ObjectCaching
         {
             //Assign
             var args = Substitute.For<ObjectCachingArgs>();
-            var abstractObjectCache = new StubAbstractObjectCache(_cacheKeyResolver);
+            var abstractObjectCache = new StubObjectCache(_cacheKeyResolver);
             abstractObjectCache.AddObject(_args);
             _cacheKeyResolver.GetKey(args).Returns(_key);
             args.CacheKey = _key;
@@ -70,7 +70,7 @@ namespace Glass.Mapper.Tests.Caching.ObjectCaching
         public void ExpectWhenTryToAddObjectAgain()
         {
             //Assign
-            var abstractObjectCache = new StubAbstractObjectCache(_cacheKeyResolver);
+            var abstractObjectCache = new StubObjectCache(_cacheKeyResolver);
 
             //Act
             abstractObjectCache.AddObject(_args);
@@ -79,11 +79,11 @@ namespace Glass.Mapper.Tests.Caching.ObjectCaching
 
     }
 
-    public class StubAbstractObjectCache : AbstractObjectCache<int>
+    public class StubObjectCache : IObjectCache
     {
         private volatile Hashtable _table = new Hashtable();
 
-        public StubAbstractObjectCache(AbstractCacheKeyResolver<int> cacheKeyResolver)
+        public StubObjectCache(AbstractCacheKeyResolver<int> cacheKeyResolver)
             : base(cacheKeyResolver, new GlassConfiguration())
         {
         }

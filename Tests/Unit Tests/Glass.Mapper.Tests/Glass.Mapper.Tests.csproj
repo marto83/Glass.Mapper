@@ -64,8 +64,6 @@
   <ItemGroup>
     <Compile Include="AbstractServiceFixture.cs" />
     <Compile Include="Caching\CacheKeyFixture.cs" />
-    <Compile Include="Caching\Configuration\AbstractObjectCacheConfigurationFixture.cs" />
-    <Compile Include="Caching\Configuration\ContextFixture.cs" />
     <Compile Include="Caching\ObjectCachingArgsFixture.cs" />
     <Compile Include="Caching\ObjectCaching\AbstractObjectCacheFixture.cs" />
     <Compile Include="Caching\ObjectCaching\MemoryObjectCacheFixture.cs" />
