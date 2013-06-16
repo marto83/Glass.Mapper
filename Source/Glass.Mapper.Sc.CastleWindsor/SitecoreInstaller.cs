@@ -20,6 +20,8 @@
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using Glass.Mapper.Caching;
+using Glass.Mapper.Caching.ObjectCaching;
 using Glass.Mapper.Pipelines.ConfigurationResolver;
 using Glass.Mapper.Pipelines.ConfigurationResolver.Tasks.OnDemandResolver;
 using Glass.Mapper.Pipelines.ConfigurationResolver.Tasks.StandardResolver;
@@ -28,8 +30,11 @@ using Glass.Mapper.Pipelines.DataMapperResolver.Tasks;
 using Glass.Mapper.Pipelines.ObjectConstruction;
 using Glass.Mapper.Pipelines.ObjectConstruction.Tasks.CreateConcrete;
 using Glass.Mapper.Pipelines.ObjectConstruction.Tasks.CreateInterface;
+using Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingResolver;
+using Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingSaver;
 using Glass.Mapper.Pipelines.ObjectSaving;
 using Glass.Mapper.Pipelines.ObjectSaving.Tasks;
+using Glass.Mapper.Sc.Caching;
 using Glass.Mapper.Sc.CastleWindsor.Pipelines.ObjectConstruction;
 using Glass.Mapper.Sc.Configuration;
 using Glass.Mapper.Sc.DataMappers;
@@ -400,6 +405,30 @@ namespace Glass.Mapper.Sc.CastleWindsor
                 Component.For<IObjectConstructionTask>().ImplementedBy<CreateDynamicTask>().LifestyleTransient()
                 );
 
+            //caching has two tasks, the resolver and the saver
+            if (Config.EnableCaching)
+            {
+                container.Register(
+                    Component.For<IObjectConstructionTask>().ImplementedBy<ObjectCachingResolverTask>()
+                    );
+
+                //check to see if someone has added a cache
+                if (container.Resolve<IObjectCache>() == null)
+                {
+                    container.Register(
+                        Component.For<IObjectCache>().ImplementedBy<MemoryObjectCache>().LifestyleSingleton()
+                     );
+                }
+                //check to see if someone has added a cache key factory
+                if (container.Resolve<ICacheKeyFactory>() == null)
+                {
+                    container.Register(
+                        Component.For<ICacheKeyFactory>().ImplementedBy<SitecoreCacheKeyFactory>().LifestyleTransient()
+                     );
+                }
+            }
+
+            //see if people want to use 
             if (Config.UseWindsorContructor)
             {
                 container.Register(
@@ -412,6 +441,14 @@ namespace Glass.Mapper.Sc.CastleWindsor
                 Component.For<IObjectConstructionTask>().ImplementedBy<CreateConcreteTask>().LifestyleTransient(),
                 Component.For<IObjectConstructionTask>().ImplementedBy<CreateInterfaceTask>().LifestyleTransient()
                 );
+
+            //caching has two tasks, the resolver and the saver
+            if (Config.EnableCaching)
+            {
+                container.Register(
+                    Component.For<IObjectConstructionTask>().ImplementedBy<ObjectCachingSaverTask>()
+                    );
+            }
         }
     }
 

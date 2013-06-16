@@ -41,6 +41,11 @@ namespace Glass.Mapper.Sc.CastleWindsor
         /// <c>true</c> if [use windsor contructor]; otherwise, <c>false</c>.
         /// </value>
         public bool UseWindsorContructor { get; set; }
+
+        /// <summary>
+        /// Indicates that caching should be enabled by Glass
+        /// </summary>
+        public bool EnableCaching { get; set; }
     }
 }
 
