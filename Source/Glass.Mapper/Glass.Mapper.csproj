@@ -64,10 +64,13 @@
     <Compile Include="AbstractDataMappingContext.cs" />
     <Compile Include="AbstractService.cs" />
     <Compile Include="AbstractTypeSavingContext.cs" />
+    <Compile Include="Caching\BasicCacheStrategy.cs" />
     <Compile Include="Caching\Exceptions\DuplicatedKeyObjectCacheException.cs" />
     <Compile Include="Caching\Exceptions\ObjectCacheException.cs" />
+    <Compile Include="Caching\ICacheIgnore.cs" />
     <Compile Include="Caching\ICacheKey.cs" />
     <Compile Include="Caching\ICacheKeyFactory.cs" />
+    <Compile Include="Caching\AbstractCacheStrategy.cs" />
     <Compile Include="Caching\ObjectCaching\IObjectCache.cs" />
     <Compile Include="Caching\ObjectCaching\MemoryObjectCache.cs" />
     <Compile Include="ActivationManager.cs" />
@@ -88,10 +91,8 @@
     <Compile Include="Configuration\ChildrenConfiguration.cs" />
     <Compile Include="Configuration\ConfigurationException.cs" />
     <Compile Include="Configuration\FieldConfiguration.cs" />
-    <Compile Include="Configuration\GlassConfiguration.cs" />
     <Compile Include="Configuration\IConfigurationLoader.cs" />
     <Compile Include="Configuration\IdConfiguration.cs" />
-    <Compile Include="Configuration\IGlassConfigurationFactory.cs" />
     <Compile Include="Configuration\IgnoreConfiguration.cs" />
     <Compile Include="Configuration\InfoConfiguration.cs" />
     <Compile Include="Configuration\LinkedConfiguration.cs" />
@@ -106,9 +107,6 @@
     <Compile Include="IGlassConfiguration.cs" />
     <Compile Include="Pipelines\ConfigurationResolver\Tasks\OnDemandResolver\ConfigurationOnDemandResolverTask.cs" />
     <Compile Include="Pipelines\ConfigurationResolver\Tasks\OnDemandResolver\OnDemandLoader.cs" />
-    <Compile Include="Pipelines\ObjectConstruction\PipelineArgsFactory.cs" />
-    <Compile Include="Pipelines\ObjectConstruction\IPipelineArgsFactory.cs" />
-    <Compile Include="Pipelines\ObjectConstruction\ObjectCachingArgs.cs" />
     <Compile Include="Pipelines\ObjectConstruction\Tasks\ObjectCachingResolver\ObjectCachingResolverTask.cs" />
     <Compile Include="Pipelines\ObjectConstruction\Tasks\ObjectCachingSaver\ObjectCachingSaverTask.cs" />
     <Compile Include="Pipelines\ObjectConstruction\Tasks\ObjectCachingTask.cs" />

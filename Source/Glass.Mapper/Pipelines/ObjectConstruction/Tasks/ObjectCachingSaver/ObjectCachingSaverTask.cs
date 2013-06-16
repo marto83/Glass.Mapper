@@ -12,19 +12,20 @@ namespace Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingSaver
     /// </summary>
     public class ObjectCachingSaverTask : ObjectCachingTask
     {
-        private readonly IObjectCache _cache;
+        public AbstractCacheStrategy CacheStrategy { get; set; }
 
-        public ObjectCachingSaverTask(IObjectCache cache, ICacheKeyFactory factory):base(factory)
+        public ObjectCachingSaverTask(ICacheKeyFactory factory):base(factory)
         {
-            _cache = cache;
+            CacheStrategy = new BasicCacheStrategy();
         }
 
-
-        public override void Execute(ObjectConstructionArgs args, ICacheKey cacheKey)
+        protected override void Execute(ObjectConstructionArgs args, ICacheKey cacheKey)
         {
-            if(args.Result != null && cacheKey != null)
-                _cache.AddObject(cacheKey, args.Result);
-
+            if (CacheStrategy.CanCache(args))
+            {
+                if (args.Result != null && cacheKey != null)
+                    ObjectCache.AddObject(cacheKey, args.Result);
+            }
         }
     }
 }

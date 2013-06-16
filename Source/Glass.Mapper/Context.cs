@@ -117,12 +117,7 @@ namespace Glass.Mapper
         /// </summary>
         /// <value>The dependency resolver.</value>
         public IDependencyResolver DependencyResolver { get; set; }
-
-        /// <summary>
-        /// Configuration for the instance of thie glass context
-        /// </summary>
-        public GlassConfiguration Configuration { get; set; }
-
+       
         /// <summary>
         /// Prevents a default instance of the <see cref="Context"/> class from being created.
         /// </summary>

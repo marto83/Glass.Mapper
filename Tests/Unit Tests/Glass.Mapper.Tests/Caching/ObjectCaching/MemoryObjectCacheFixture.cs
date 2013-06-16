@@ -15,90 +15,53 @@ namespace Glass.Mapper.Tests.Caching.ObjectCaching
     [TestFixture]
     public class MemoryObjectCacheFixture
     {
-        private AbstractCacheKeyResolver<int> _cacheKeyResolver;
         private const string Database = "SomeDatabase";
-        private GlassConfiguration _glassConfiguration;
         [SetUp]
         public void SetUp()
         {
-            _cacheKeyResolver = Substitute.For<AbstractCacheKeyResolver<int>>();
-            _glassConfiguration = new GlassConfiguration();
         }
 
         [Test]
-        public void AbstractObjectCacheContainObject()
+        public void AddObject_ObjectAddedToCache_ContainsObjectReturnsTrue()
         {
-            var id =  1;
-            var revisionId = 1;
-            var args = Substitute.For<ObjectCachingArgs>();
-            var stubClass = new StubClass();
-            var key = Substitute.For<CacheKey<int>>(id, revisionId, Database);
-
-            args.Result = stubClass;
-            args.CacheKey = key;
-
-            _cacheKeyResolver.GetKey(args).Returns(key);
-
-
             //Assign
-            var abstractObjectCache = new MemoryObjectCache(_cacheKeyResolver, _glassConfiguration);
+            var abstractObjectCache = new MemoryObjectCache();
+            string cacheKeyValue = "9CDC0A52-5410-452F-8764-03E396A11E90";
+            var obj = new Stub();
+            var key = Substitute.For<ICacheKey>();
+            key.GetKey().Returns(cacheKeyValue);
 
             //Act
-            abstractObjectCache.AddObject(args);
+            abstractObjectCache.AddObject(key, obj);
 
             //Assert
-            Assert.IsTrue(abstractObjectCache.ContansObject(args));
+            Assert.IsTrue(abstractObjectCache.ContainsObject(key));
         }
 
         [Test]
-        public void AbstractObjectCacheAddObject()
+        public void GetObject_ReturnsObjectInCache_GetObjectReturnsObject()
         {
             //Assign
+            var abstractObjectCache = new MemoryObjectCache();
+            string cacheKeyValue = "9CDC0A52-5410-452F-8764-03E396A11E90";
+            var obj = new Stub();
+            var key = Substitute.For<ICacheKey>();
+            key.GetKey().Returns(cacheKeyValue);
 
-            var id = 2;
-            var revisionId = 2;
-            var args = Substitute.For<ObjectCachingArgs>();
-            var stubClass = new StubClass();
-            var key = Substitute.For<CacheKey<int>>(id, revisionId, Database);
-
-            args.Result = stubClass;
-            args.CacheKey = key;
-
-            _cacheKeyResolver.GetKey(args).Returns(key);
-
-            var abstractObjectCache = new MemoryObjectCache(_cacheKeyResolver, _glassConfiguration);
-            abstractObjectCache.AddObject(args);
-            _cacheKeyResolver.GetKey(args).Returns(key);
-            args.CacheKey = key;
+            abstractObjectCache.AddObject(key, obj);
 
             //Act
-            abstractObjectCache.GetObject(args).Returns(key);
+            var result = abstractObjectCache.GetObject(key);
 
             //Assert
-            Assert.AreSame(stubClass, abstractObjectCache.GetObject(args));
+            Assert.AreEqual(obj, result);
         }
 
-        [Test]
-        [ExpectedException(typeof(DuplicatedKeyObjectCacheException))]
-        public void ExpectWhenTryToAddObjectAgain()
-        {
-            //Assign
-            var abstractObjectCache = new MemoryObjectCache(_cacheKeyResolver, _glassConfiguration);
+       
+        #region Stubs
 
-            var id = 3;
-            var revisionId = 3;
-            var args = Substitute.For<ObjectCachingArgs>();
-            var stubClass = new StubClass();
-            var key = Substitute.For<CacheKey<int>>(id, revisionId, Database);
+        public class Stub{}
 
-            _cacheKeyResolver.GetKey(args).Returns(key);
-
-            args.Result = stubClass;
-            args.CacheKey = key;
-
-            //Act
-            abstractObjectCache.AddObject(args);
-            abstractObjectCache.AddObject(args);
-        }
+        #endregion
     }
 }

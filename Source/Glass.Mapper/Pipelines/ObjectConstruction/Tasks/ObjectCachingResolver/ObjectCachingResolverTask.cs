@@ -30,18 +30,16 @@ namespace Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingResolver
     /// </summary>
     public class ObjectCachingResolverTask : ObjectCachingTask
     {
-        private readonly IObjectCache _cache;
 
-        public ObjectCachingResolverTask(IObjectCache cache, ICacheKeyFactory factory):base(factory)
+        public ObjectCachingResolverTask(ICacheKeyFactory factory):base(factory)
         {
-            _cache = cache;
         }
 
-        public override void Execute(ObjectConstructionArgs args, ICacheKey cacheKey)
+        protected override void Execute(ObjectConstructionArgs args, ICacheKey cacheKey)
         {
-            if (cacheKey == null || !_cache.ContainsObject(cacheKey)) return;
+            if (cacheKey == null || !ObjectCache.ContainsObject(cacheKey)) return;
 
-            args.Result = _cache.GetObject(cacheKey);
+            args.Result = ObjectCache.GetObject(cacheKey);
 
             args.AbortPipeline();
         }

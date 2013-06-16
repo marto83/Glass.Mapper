@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Glass.Mapper.Caching;
+using Glass.Mapper.Caching.ObjectCaching;
 
 namespace Glass.Mapper.Pipelines.ObjectConstruction.Tasks
 {
     public abstract class ObjectCachingTask : IObjectConstructionTask
     {
         private readonly ICacheKeyFactory _factory;
+        private IObjectCache _objectCache = new MemoryObjectCache();
+
+        public IObjectCache ObjectCache
+        {
+            get { return _objectCache; }
+            set { _objectCache = value; }
+        }
 
         public ObjectCachingTask(ICacheKeyFactory factory)
         {
@@ -23,7 +31,7 @@ namespace Glass.Mapper.Pipelines.ObjectConstruction.Tasks
                 Execute(args, key);
         }
 
-        public abstract void Execute(ObjectConstructionArgs args, ICacheKey cacheKey);
+        protected abstract void Execute(ObjectConstructionArgs args, ICacheKey cacheKey);
 
     }
 }

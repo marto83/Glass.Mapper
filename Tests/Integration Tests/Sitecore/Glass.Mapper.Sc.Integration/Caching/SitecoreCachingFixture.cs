@@ -16,7 +16,7 @@ namespace Glass.Mapper.Sc.Integration.Caching
         {
             //Assign
             var db = Sitecore.Configuration.Factory.GetDatabase("master");
-            var context = Context.Create(DependencyResolver.CreateCachingResolver());
+            var context = Context.Create(Utilities.CreateStandardResolver());
             context.Load(new SitecoreAttributeConfigurationLoader("Glass.Mapper.Sc.Integration"));
 
             var path = "/sitecore/content/Tests/SitecoreContext/GetCurrentItem/Target";
