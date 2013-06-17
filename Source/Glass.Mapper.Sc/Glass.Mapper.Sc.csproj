@@ -147,6 +147,7 @@
     <Compile Include="Dynamic\DynamicCollection.cs" />
     <Compile Include="Dynamic\DynamicField.cs" />
     <Compile Include="Dynamic\DynamicItem.cs" />
+    <Compile Include="Events\PublishComplete\GlassCacheClear.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Fields\File.cs" />
     <Compile Include="Fields\Image.cs" />

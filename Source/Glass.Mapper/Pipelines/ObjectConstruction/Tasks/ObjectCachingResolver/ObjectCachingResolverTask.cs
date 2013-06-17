@@ -36,8 +36,6 @@ namespace Glass.Mapper.Pipelines.ObjectConstruction.Tasks.ObjectCachingResolver
             if (cacheKey == null || !ObjectCache.ContainsObject(cacheKey)) return;
 
             args.Result = ObjectCache.GetObject(cacheKey);
-
-            args.AbortPipeline();
         }
     }
 }
