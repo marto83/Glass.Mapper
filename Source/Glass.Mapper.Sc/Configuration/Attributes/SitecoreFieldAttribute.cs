@@ -31,6 +31,7 @@ namespace Glass.Mapper.Sc.Configuration.Attributes
     /// <summary>
     /// Class SitecoreFieldAttribute
     /// </summary>
+    public class SitecoreFieldAttribute : FieldAttribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SitecoreFieldAttribute"/> class.

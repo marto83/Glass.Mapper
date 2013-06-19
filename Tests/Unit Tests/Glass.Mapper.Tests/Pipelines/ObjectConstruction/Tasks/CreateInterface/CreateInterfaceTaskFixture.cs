@@ -91,7 +91,7 @@ namespace Glass.Mapper.Tests.Pipelines.ObjectConstruction.Tasks.CreateInterface
 
             //Assert
             Assert.IsNotNull(args.Result);
-            Assert.IsTrue(args.IsAborted);
+            Assert.IsFalse(args.IsAborted);
             Assert.IsTrue(args.Result is IStubInterface);
             Assert.IsFalse(args.Result.GetType() == typeof(IStubInterface));
         }
