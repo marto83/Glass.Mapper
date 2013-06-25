@@ -14,7 +14,10 @@ namespace Glass.Mapper.Caching
         public override bool CanCache(Pipelines.ObjectConstruction.ObjectConstructionArgs args)
         {
             return base.CanCache(args)
-                   && !args.AbstractTypeCreationContext.ConstructorParameters.Any();
+
+                   &&
+                   (args.AbstractTypeCreationContext.ConstructorParameters == null ||
+                    !args.AbstractTypeCreationContext.ConstructorParameters.Any());
         }
     }
 }

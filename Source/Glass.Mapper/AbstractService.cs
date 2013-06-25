@@ -35,7 +35,6 @@ namespace Glass.Mapper
     public abstract class AbstractService : IAbstractService
     {
 
-        private IPerformanceProfiler _profiler;
 
         /// <summary>
         /// Gets or sets the profiler.
@@ -43,17 +42,7 @@ namespace Glass.Mapper
         /// <value>
         /// The profiler.
         /// </value>
-        public IPerformanceProfiler Profiler
-        {
-            get { return _profiler; }
-            set
-            {
-                _configurationResolver.Profiler = value;
-                _objectConstruction.Profiler = value;
-                _objectSaving.Profiler = value;
-                _profiler = value;
-            }
-        }
+        public IPerformanceProfiler Profiler { get; set; }
 
         /// <summary>
         /// Gets the glass context.
@@ -100,14 +89,11 @@ namespace Glass.Mapper
             if (GlassContext == null) 
                 throw new NullReferenceException("Context is null");
 
-            var objectConstructionTasks = glassContext.DependencyResolver.ResolveAll<IObjectConstructionTask>();
-            _objectConstruction = new ObjectConstruction(objectConstructionTasks); 
+            _objectConstruction = glassContext.DependencyResolver.Resolve<ObjectConstruction>();
 
-            var configurationResolverTasks = glassContext.DependencyResolver.ResolveAll<IConfigurationResolverTask>();
-            _configurationResolver = new ConfigurationResolver(configurationResolverTasks);
+            _configurationResolver = glassContext.DependencyResolver.Resolve<ConfigurationResolver>();
 
-            var objectSavingTasks = glassContext.DependencyResolver.ResolveAll<IObjectSavingTask>();
-            _objectSaving = new ObjectSaving(objectSavingTasks);
+            _objectSaving = glassContext.DependencyResolver.Resolve<ObjectSaving>();
 
             Profiler = new NullProfiler();
 
