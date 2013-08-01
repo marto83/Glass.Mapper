@@ -37,11 +37,13 @@ namespace Glass.Mapper.Caching
 
         public void ClearCache()
         {
-            if (_objectCache != null)
-            {
-                _objectCache.Dispose();
-            }
+            var oldCache = _objectCache;
             _objectCache = new MemoryCache(CacheName);
+
+            if (oldCache != null)
+            {
+                oldCache.Dispose();
+            }
         }
 
         public object GetObject(ICacheKey cacheKey)
