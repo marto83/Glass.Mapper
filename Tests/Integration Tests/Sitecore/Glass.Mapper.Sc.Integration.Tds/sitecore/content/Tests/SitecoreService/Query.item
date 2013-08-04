@@ -1,40 +1,26 @@
 ----item----
 version: 1
-id: {56EB4FD5-7204-49B8-B4FB-ED2BD186F8B3}
+id: {652ABF88-488E-4642-9A9C-EB8A107B4B2F}
 database: master
-path: /sitecore/content/Tests/DataMappers/AbstractSitecoreFieldMapper/MapToProperty
-parent: {4BF5B341-73D1-4180-9808-3355C0A281B8}
-name: MapToProperty
+path: /sitecore/content/Tests/SitecoreService/Query
+parent: {026DE38A-562B-4F54-B913-0CDF9122934D}
+name: Query
 master: {00000000-0000-0000-0000-000000000000}
-template: {3A1B89BA-3885-4BD6-8326-67605764676C}
-templatekey: DataMappersSingleField
+template: {A87A00B1-E6DB-45AB-8B54-636FEC3B5523}
+templatekey: Folder
 
 ----version----
 language: en
 version: 1
-revision: 50e57b2c-e955-44c4-9918-16cd42a018f8
+revision: 3eb9c3dc-cd83-408b-84a0-9c9a85dc2b5e
 
-----field----
-field: {6B43481F-F129-4F53-BEEE-EA84F9B1A6D4}
-name: Field
-key: field
-content-length: 10
-
-test value
-----field----
-field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
-name: __Owner
-key: __owner
-content-length: 14
-
-sitecore\admin
 ----field----
 field: {25BED78C-4957-4165-998A-CA1B52F67497}
 name: __Created
 key: __created
 content-length: 15
 
-20121216T204049
+20130801T203037
 ----field----
 field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
 name: __Created by
@@ -48,18 +34,18 @@ name: __Revision
 key: __revision
 content-length: 36
 
-50e57b2c-e955-44c4-9918-16cd42a018f8
+3eb9c3dc-cd83-408b-84a0-9c9a85dc2b5e
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20130603T232056:635058984568483061
+20130801T203037:635109858371231758
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by
 key: __updated by
-content-length: 17
+content-length: 14
 
-default\Anonymous
+sitecore\admin
