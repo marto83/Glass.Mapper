@@ -35,6 +35,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug - Aaron|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug - Aaron\</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CI|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\CI\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -71,6 +74,7 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -84,22 +88,11 @@
     <Compile Include="ConnectionFixture.cs" />
     <Compile Include="DataMappers\AbstractMapperFixture.cs" />
     <Compile Include="DataMappers\AbstractSitecoreFieldMapperFixture.cs" />
-    <Compile Include="DataMappers\SitecoreFieldLongMapperFixture.cs" />
-    <Compile Include="DataMappers\SitecoreFieldIntegerMapperFixture.cs" />
-    <Compile Include="DataMappers\SitecoreFieldFloatMapperFixture.cs" />
-    <Compile Include="DataMappers\SitecoreFieldEnumMapperFixture.cs" />
-    <Compile Include="DataMappers\SitecoreFieldDoubleMapperFixture.cs" />
     <Compile Include="DataMappers\SitecoreChildrenMapperFixture.cs" />
-    <Compile Include="DataMappers\SitecoreFieldBooleanMapperFixture.cs" />
-    <Compile Include="DataMappers\SitecoreFieldDateTimeMapperFixture.cs" />
-    <Compile Include="DataMappers\SitecoreFieldDecimalMapperFixture.cs" />
     <Compile Include="DataMappers\SitecoreFieldFileMapperFixture.cs" />
-    <Compile Include="DataMappers\SitecoreFieldGuidMapperFixture.cs" />
     <Compile Include="DataMappers\SitecoreFieldIEnumerableMapperFixture.cs" />
     <Compile Include="DataMappers\SitecoreFieldImageMapperFixture.cs" />
     <Compile Include="DataMappers\SitecoreFieldLinkMapperFixture.cs" />
-    <Compile Include="DataMappers\SitecoreFieldNameValueCollectionMapperFixture.cs" />
-    <Compile Include="DataMappers\SitecoreFieldNullableMapperFixture.cs" />
     <Compile Include="DataMappers\SitecoreFieldRulesMapperFixture.cs" />
     <Compile Include="DataMappers\SitecoreFieldStreamMapperFixture.cs" />
     <Compile Include="DataMappers\SitecoreFieldStringMapperFixture.cs" />
@@ -257,6 +250,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">
   </Target>
