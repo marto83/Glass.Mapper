@@ -114,14 +114,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{566109ED-A88A-467E-BDDB-BBF7F831A006}.Debug - Aaron|Any CPU.ActiveCfg = Debug - Aaron|Any CPU
-		{566109ED-A88A-467E-BDDB-BBF7F831A006}.Debug - Aaron|Any CPU.Build.0 = Debug - Aaron|Any CPU
+		{566109ED-A88A-467E-BDDB-BBF7F831A006}.Debug - Aaron|Any CPU.ActiveCfg = Debug|Any CPU
+		{566109ED-A88A-467E-BDDB-BBF7F831A006}.Debug - Aaron|Any CPU.Build.0 = Debug|Any CPU
 		{566109ED-A88A-467E-BDDB-BBF7F831A006}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{566109ED-A88A-467E-BDDB-BBF7F831A006}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{566109ED-A88A-467E-BDDB-BBF7F831A006}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{566109ED-A88A-467E-BDDB-BBF7F831A006}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0B8E0B06-46B8-4794-862F-73B391F8B1A1}.Debug - Aaron|Any CPU.ActiveCfg = Debug - Aaron|Any CPU
-		{0B8E0B06-46B8-4794-862F-73B391F8B1A1}.Debug - Aaron|Any CPU.Build.0 = Debug - Aaron|Any CPU
+		{0B8E0B06-46B8-4794-862F-73B391F8B1A1}.Debug - Aaron|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B8E0B06-46B8-4794-862F-73B391F8B1A1}.Debug - Aaron|Any CPU.Build.0 = Debug|Any CPU
 		{0B8E0B06-46B8-4794-862F-73B391F8B1A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0B8E0B06-46B8-4794-862F-73B391F8B1A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B8E0B06-46B8-4794-862F-73B391F8B1A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
