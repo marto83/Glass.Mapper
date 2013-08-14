@@ -63,7 +63,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractServiceFixture.cs" />
-    <Compile Include="Caching\ObjectCaching\MemoryObjectCacheFixture.cs" />
+    <Compile Include="Caching\AbstractCacheKeyFixture.cs" />
+    <Compile Include="Caching\AbstractObjectCacheFixture.cs" />
     <Compile Include="Configuration\AbstractTypeConfigurationFixture.cs" />
     <Compile Include="Configuration\Attributes\AttributeConfigurationLoaderFixture.cs" />
     <Compile Include="Configuration\Attributes\AbstractClassAttributeFixture.cs" />
@@ -82,8 +83,6 @@
     <Compile Include="Pipelines\ConfigurationResolver\Tasks\StandardResolver\ConfigurationStandardResolverTaskFixture.cs" />
     <Compile Include="Pipelines\ObjectConstruction\Tasks\CreateConcrete\LazyObjectInterceptorFixture.cs" />
     <Compile Include="Pipelines\ObjectConstruction\Tasks\CreateInterface\CreateInterfaceTaskFixture.cs" />
-    <Compile Include="Pipelines\ObjectConstruction\Tasks\ObjectCachingResolver\ObjectCachingResolverTaskFixture.cs" />
-    <Compile Include="Pipelines\ObjectConstruction\Tasks\ObjectCachingSaver\ObjectCachingSaverTaskFixture.cs" />
     <Compile Include="Pipelines\ObjectSaving\Tasks\StandardSavingTaskFixture.cs" />
     <Compile Include="UtilitiesFixture.cs" />
     <Compile Include="Pipelines\AbstractPipelineRunnerFixture.cs" />
@@ -98,10 +97,6 @@
     <ProjectReference Include="..\..\..\Source\Glass.Mapper\Glass.Mapper.csproj">
       <Project>{566109ED-A88A-467E-BDDB-BBF7F831A006}</Project>
       <Name>Glass.Mapper</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Integration Tests\Sitecore\Glass.Mapper.Sc.Integration\Glass.Mapper.Sc.Integration.csproj">
-      <Project>{ED059096-C6AC-42AA-B0B2-74104E1AF861}</Project>
-      <Name>Glass.Mapper.Sc.Integration</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
