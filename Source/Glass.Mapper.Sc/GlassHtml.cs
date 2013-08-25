@@ -25,20 +25,16 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Web;
-using Glass.Mapper.Configuration;
-using Glass.Mapper.Pipelines.ConfigurationResolver.Tasks.OnDemandResolver;
 using Glass.Mapper.Sc.Configuration;
 using Glass.Mapper.Sc.RenderField;
 using Glass.Mapper.Sc.Web.Ui;
-using Sitecore.Collections;
 using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Pipelines;
 using Sitecore.Pipelines.RenderField;
+using Sitecore.SecurityModel;
 using Sitecore.Text;
 using Sitecore.Web;
-using Sitecore.Web.UI.WebControls;
-using Sitecore.Xml.Xsl;
 
 namespace Glass.Mapper.Sc
 {
@@ -60,7 +56,6 @@ namespace Glass.Mapper.Sc
         /// Initializes a new instance of the <see cref="GlassHtml"/> class.
         /// </summary>
         /// <param name="sitecoreContext">The service that will be used to load and save data</param>
-        /// <param name="writer"></param>
         public GlassHtml(ISitecoreContext sitecoreContext)
         {
             SitecoreContext = sitecoreContext;
@@ -93,7 +88,7 @@ namespace Glass.Mapper.Sc
         /// <returns>HTML output to either render the editable controls or normal HTML</returns>
         public virtual string Editable<T>(T target, Expression<Func<T, object>> field)
         {
-            return MakeEditable<T>(field, null, target);
+            return MakeEditable(field, null, target);
         }
 
         /// <summary>
@@ -106,7 +101,7 @@ namespace Glass.Mapper.Sc
         /// <returns>HTML output to either render the editable controls or normal HTML</returns>
         public virtual string Editable<T>(T target, Expression<Func<T, object>> field, AbstractParameters parameters)
         {
-            return MakeEditable<T>(field, null, target, parameters);
+            return MakeEditable(field, null, target, parameters);
         }
 
         /// <summary>
@@ -119,7 +114,7 @@ namespace Glass.Mapper.Sc
         /// <returns>HTML output to either render the editable controls or normal HTML</returns>
         public virtual string Editable<T>(T target, Expression<Func<T, object>> field, string parameters)
         {
-            return MakeEditable<T>(field, null, target, parameters);
+            return MakeEditable(field, null, target, parameters);
         }
 
         /// <summary>
@@ -132,7 +127,7 @@ namespace Glass.Mapper.Sc
         /// <returns>HTML output to either render the editable controls or normal HTML</returns>
         public virtual string Editable<T>(T target, Expression<Func<T, object>> field, Expression<Func<T, string>> standardOutput)
         {
-            return MakeEditable<T>(field, standardOutput, target);
+            return MakeEditable(field, standardOutput, target);
         }
 
         /// <summary>
@@ -146,11 +141,65 @@ namespace Glass.Mapper.Sc
         /// <returns>HTML output to either render the editable controls or normal HTML</returns>
         public virtual string Editable<T>(T target, Expression<Func<T, object>> field, Expression<Func<T, string>> standardOutput, AbstractParameters parameters)
         {
-            return MakeEditable<T>(field, null, target, parameters);
+            return MakeEditable(field, null, target, parameters);
         }
 
-       
 
+        public virtual T GetRenderingParameters<T>(string parameters, ID renderParametersTemplateId) where T : class
+        {
+            var nameValueCollection = WebUtil.ParseUrlParameters(parameters);
+            return GetRenderingParameters<T>(nameValueCollection, renderParametersTemplateId);
+        }
+        public T GetRenderingParameters<T>(NameValueCollection parameters, ID renderParametersTemplateId) where T:class{
+
+            var item = Utilities.CreateFakeItem(null, renderParametersTemplateId, SitecoreContext.Database, "renderingParameters");
+
+            using (new SecurityDisabler() )
+            {
+                using (new VersionCountDisabler())
+                {
+                    item.Editing.BeginEdit();
+
+                    foreach (var key in parameters.AllKeys)
+                    {
+                        item[key] = parameters[key];
+                    }
+                    T obj = item.GlassCast<T>();
+
+                    item.Editing.CancelEdit();
+                    return obj;
+                }
+            }
+
+        }
+
+
+        /// <summary>
+        /// Converts rendering parameters to a concrete type. Use this method if you have defined the template ID on the 
+        /// model configuration.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public virtual T GetRenderingParameters<T>(string parameters) where T : class
+        {
+            var config = SitecoreContext.GlassContext[typeof (T)] as SitecoreTypeConfiguration;
+            return GetRenderingParameters<T>(parameters, config.TemplateId);
+        }
+
+
+        /// <summary>
+        /// Converts rendering parameters to a concrete type. Use this method if you have defined the template ID on the 
+        /// model configuration.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public virtual T GetRenderingParameters<T>(NameValueCollection parameters) where T : class
+        {
+            var config = SitecoreContext.GlassContext[typeof(T)] as SitecoreTypeConfiguration;
+            return GetRenderingParameters<T>(parameters, config.TemplateId);
+        }
 
         /// <summary>
         /// The image width
@@ -220,11 +269,15 @@ namespace Glass.Mapper.Sc
         }
 
 
-
         /// <summary>
         /// Render HTML for a link
         /// </summary>
         /// <param name="link">The link to render</param>
+        /// <param name="model">The model containing the link</param>
+        /// <param name="field">An expression that points to the link</param>
+        /// <param name="attributes">A collection of attributes to added to the link</param>
+        /// <param name="isEditable">Indicate if the link should be editable in the page editor</param>
+        /// <param name="contents">Content to go in the link</param>
         /// <returns>An "a" HTML element</returns>
         public virtual string RenderLink<T>(T model, Expression<Func<T, object>> field, NameValueCollection attributes = null, bool isEditable = false, string contents = null)
         {

@@ -16,10 +16,7 @@
 */ 
 //-CRE-
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Glass.Mapper.Profilers;
 
 namespace Glass.Mapper.Pipelines
@@ -69,11 +66,13 @@ namespace Glass.Mapper.Pipelines
                 foreach (var task in _tasks)
                 {
 #if DEBUG
-                    Profiler.Start(task.GetType().FullName);
+                    var name = DateTime.Now.Ticks + task.GetType().FullName;
+
+                    Profiler.Start(name);
 #endif
                     task.Execute(args);
 #if DEBUG
-                    Profiler.End(task.GetType().FullName);
+                    Profiler.End(name);
 #endif 
                     if (args.IsAborted)
                         break;
