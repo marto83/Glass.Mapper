@@ -1,54 +1,89 @@
 ﻿using System;
+using Glass.Mapper.Caching.Exceptions;
 
 namespace Glass.Mapper.Caching
 {
     /// <summary>
     /// Abstract base class that represents the key of a object in cache
     /// </summary>
-    public abstract class AbstractCacheKey
+    public abstract class AbstractCacheKey : IEquatable<AbstractCacheKey>
     {
+        /// <summary>
+        /// The default group identifier
+        /// </summary>
+        public const string DefaultGroupIdentifier = "DefaultGroupIdentifier";
 
         /// <summary>
-        /// Gets the base key.
+        /// Gets the unique identifier.
         /// </summary>
         /// <value>
-        /// The base key.
+        /// The unique identifier.
         /// </value>
-        public string BaseKey { get; private set; }
+        public string UniqueIdentifier { get; private set; }
 
         /// <summary>
-        /// Gets the key.
+        /// Gets the group identifier.
         /// </summary>
-        /// <returns></returns>
-        public string GetKey()
-        {
-            return InternalGetKey() + BaseKey;
-        }
-
-        /// <summary>
-        /// Internals the get key.
-        /// </summary>
-        /// <returns>The key</returns>
-        public abstract string InternalGetKey();
+        /// <value>
+        /// The group identifier.
+        /// </value>
+        public string GroupIdentifier { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AbstractCacheKey"/> class.
         /// </summary>
         protected AbstractCacheKey()
         {
+            
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AbstractCacheKey"/> class.
+        /// Initializes a new instance of the <see cref="AbstractCacheKey" /> class.
         /// </summary>
-        /// <param name="objectType">Type of the object.</param>
-        /// <exception cref="System.NullReferenceException"></exception>
-        protected AbstractCacheKey(Type objectType)
+        /// <param name="uniqueIdentifier">The unique identifier.</param>
+        /// <param name="groupIdentifier">The group identifier.</param>
+        /// <exception cref="Glass.Mapper.Caching.Exceptions.NullGroupIdentifierException"></exception>
+        protected AbstractCacheKey(string uniqueIdentifier, string groupIdentifier)
         {
-            if(objectType == null)
-                throw  new NullReferenceException();
+            CheckId(uniqueIdentifier);
+            SetUniqueIdentifier(uniqueIdentifier);
+            
+            CheckGroupIdentifier(groupIdentifier);
+            SetGroupIdentifier(groupIdentifier);
 
-            BaseKey = objectType.FullName;
+        }
+
+        private void SetGroupIdentifier(string groupIdentifier)
+        {
+            GroupIdentifier = string.IsNullOrEmpty(groupIdentifier) ? DefaultGroupIdentifier : groupIdentifier;
+        }
+
+        private static void CheckGroupIdentifier(string groupIdentifier)
+        {
+            if (groupIdentifier == null)
+                throw new NullGroupIdentifierException();
+        }
+
+        private void SetUniqueIdentifier(string uniqueIdentifier)
+        {
+            UniqueIdentifier = uniqueIdentifier;
+        }
+
+        private void CheckId(string uniqueIdentifier)
+        {
+            if (string.IsNullOrEmpty(uniqueIdentifier))
+                if (uniqueIdentifier == null)
+                    throw new NullUniqueIdentifierException();
+                else
+                    throw new EmptyUniqueIdentifierException();
+
+            
+
+        }
+
+        public bool Equals(AbstractCacheKey other)
+        {
+            return UniqueIdentifier == other.UniqueIdentifier;
         }
     }
 }

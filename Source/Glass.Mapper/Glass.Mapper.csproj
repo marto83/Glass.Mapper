@@ -68,6 +68,10 @@
     <Compile Include="Caching\AbstractCacheKey.cs" />
     <Compile Include="Caching\AbstractObjectCache.cs" />
     <Compile Include="Caching\DuplicatedKeyException.cs" />
+    <Compile Include="Caching\Exceptions\EmptyUniqueIdentifierException.cs" />
+    <Compile Include="Caching\Exceptions\NullCacheKeyException.cs" />
+    <Compile Include="Caching\Exceptions\NullGroupIdentifierException.cs" />
+    <Compile Include="Caching\Exceptions\NullUniqueIdentifierException.cs" />
     <Compile Include="Configuration\AbstractTypeConfiguration.cs" />
     <Compile Include="Configuration\AbstractPropertyConfiguration.cs" />
     <Compile Include="Configuration\Attributes\AttributeConfigurationLoader.cs" />

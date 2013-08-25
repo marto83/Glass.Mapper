@@ -1,103 +1,74 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Glass.Mapper.Caching.Exceptions;
 
 namespace Glass.Mapper.Caching
 {
     /// <summary>
-    /// 
+    /// An abstract class responsible for dealing with the common logic for caching
     /// </summary>
     public abstract class AbstractObjectCache
     {
-        /// <summary>
-        /// The default base key
-        /// </summary>
-        public static string DefaultAbstractObjectCacheBaseKey = "GlassCache";
-
-        /// <summary>
-        /// Gets the base key.
-        /// </summary>
-        /// <value>
-        /// The base key.
-        /// </value>
-        public string AbstractObjectCacheBaseKey { get; private set; }
+        protected readonly List<AbstractCacheKey> CacheKeys;
+        protected readonly Dictionary<string, List<AbstractCacheKey>> Groups;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AbstractObjectCache"/> class.
         /// </summary>
         protected AbstractObjectCache()
-            : this(DefaultAbstractObjectCacheBaseKey)
         {
+            CacheKeys= new List<AbstractCacheKey>();
+            Groups = new Dictionary<string, List<AbstractCacheKey>>();
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AbstractObjectCache"/> class.
-        /// </summary>
-        /// <param name="baseKey">The base key.</param>
-        protected AbstractObjectCache(string baseKey)
-        {
-            SetBaseKey(baseKey);
-        }
-
-
-        /// <summary>
-        /// Internals the add.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="objectForCaching">The object for caching.</param>
-        protected abstract void InternalAdd(string key, object objectForCaching);
-
-        /// <summary>
-        /// Checks to see if the key has already been added to the cache.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <returns></returns>
-        protected abstract bool CheckKey(string key);
-
 
         /// <summary>
         /// Adds the specified cache key.
         /// </summary>
         /// <param name="cacheKey">The cache key.</param>
         /// <param name="objectForCaching">The object for caching.</param>
-        /// <exception cref="DuplicatedKeyException"></exception>
+        /// <exception cref="System.NotImplementedException"></exception>
         public void Add(AbstractCacheKey cacheKey, object objectForCaching)
         {
-            CheckObjectForCaching(objectForCaching);
+            if (cacheKey == null)
+                throw new NullCacheKeyException();
 
-            var key = GetCacheKey(cacheKey);
+            CacheKeys.Add(cacheKey);
 
-            if (CheckKey(key))
-                throw new DuplicatedKeyException();
-
-            InternalAdd(key, objectForCaching);
+            Groups.Add(cacheKey.GroupIdentifier, new List<AbstractCacheKey> {cacheKey});
         }
 
         /// <summary>
-        /// Adds to group.
+        /// Contains the cache key.
         /// </summary>
-        /// <param name="groupKey">The group key.</param>
         /// <param name="cacheKey">The cache key.</param>
-        /// <param name="objectForGrouping">The object for grouping.</param>
-        /// <exception cref="System.NullReferenceException"></exception>
-        public void AddToGroup(string groupKey, string cacheKey, object objectForGrouping)
+        /// <returns></returns>
+        public bool ContainCacheKey(AbstractCacheKey cacheKey)
         {
-            if (string.IsNullOrEmpty(groupKey) || string.IsNullOrEmpty(cacheKey))
-                throw new NullReferenceException();
+            return CacheKeys.Any(x => x.Equals(cacheKey));
         }
 
-        private string GetCacheKey(AbstractCacheKey cacheKey)
+        /// <summary>
+        /// Contains the group key.
+        /// </summary>
+        /// <param name="groupIdentifier">The group identifier.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public bool ContainGroupKey(string groupIdentifier)
         {
-            return cacheKey.GetKey() + AbstractObjectCacheBaseKey;
+            return Groups.Any(x => x.Key.Equals(groupIdentifier));
         }
 
-        private static void CheckObjectForCaching(object objectForCaching)
+        /// <summary>
+        /// Gets the grouped cache keys.
+        /// </summary>
+        /// <param name="groupIdentifier">The group identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public List<AbstractCacheKey> GetGroupedCacheKeys(string groupIdentifier)
         {
-            if (objectForCaching == null)
-                throw new NullReferenceException();
-        }
-
-        private void SetBaseKey(string baseKey)
-        {
-            AbstractObjectCacheBaseKey = string.IsNullOrEmpty(baseKey) ? DefaultAbstractObjectCacheBaseKey : baseKey;
+            if (Groups.ContainsKey(groupIdentifier))
+                return Groups[groupIdentifier];
+            
+            return new List<AbstractCacheKey>();
         }
     }
 }

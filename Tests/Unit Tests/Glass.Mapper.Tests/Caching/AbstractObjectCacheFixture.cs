@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Glass.Mapper.Caching;
+using Glass.Mapper.Caching.Exceptions;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -11,177 +10,100 @@ namespace Glass.Mapper.Tests.Caching
     public class AbstractObjectCacheFixture
     {
         [Test]
-        public void Can_Create_Object_Cache()
+        public void Add_Object_To_Cache_With_Null_Cache_Key_Null_Cache_Key_Exception_Thrown()
         {
             //assign
             var objectCache = Substitute.For<AbstractObjectCache>();
 
-            //act
-
             //assert
-            Assert.NotNull(objectCache);
+            Assert.Throws<NullCacheKeyException>(() => objectCache.Add(null, new object()));
         }
 
         [Test]
-        public void Create_Object_Cache_Default_Constructor_Base_Key_Is_Default()
+        public void Add_Object_To_Cache_With_Cache_Key_Object_Cache_Contains_Cache_Key()
         {
-            //assign
+            //assign 
             var objectCache = Substitute.For<AbstractObjectCache>();
-
+            var groupIdentifier = "GroupIdentifier";
+            var uniqueIdentifier = "UniqueIdentifier";
+            var cacheKey = Substitute.For<AbstractCacheKey>(uniqueIdentifier, groupIdentifier);
+            var objectForCaching = new object();
+            
             //act
+            objectCache.Add(cacheKey, objectForCaching);
 
             //assert
-            Assert.AreEqual(AbstractObjectCache.DefaultAbstractObjectCacheBaseKey, objectCache.AbstractObjectCacheBaseKey); 
+            Assert.IsTrue(objectCache.ContainCacheKey(cacheKey));
         }
 
         [Test]
-        public void Create_Object_Cache_Pass_Null_To_Constructor_Base_Key_Is_Default()
+        public void Object_Not_Added_To_Cache_Object_Cache_Does_Not_Contain_Cache_Key()
         {
-            //assign
-            var objectCache = Substitute.For<AbstractObjectCache>(null);
-
-            //act
-
-            //assert
-            Assert.AreEqual(AbstractObjectCache.DefaultAbstractObjectCacheBaseKey, objectCache.AbstractObjectCacheBaseKey);
-        }
-
-        [Test]
-        public void Create_Object_Cache_Pass_Empty_String_To_Constructor_Base_Key_Is_Default()
-        {
-            //assign
-            var objectCache = Substitute.For<AbstractObjectCache>(string.Empty);
-
-            //act
-
-            //assert
-            Assert.AreEqual(AbstractObjectCache.DefaultAbstractObjectCacheBaseKey, objectCache.AbstractObjectCacheBaseKey);
-        }
-
-        [Test]
-        public void Create_Object_Cache_Pass_String_To_Constructor_Base_Key_Is_String()
-        {
-            //assign
-            var testBaseKey = "TestBaseKey";
-            var objectCache = Substitute.For<AbstractObjectCache>(testBaseKey);
-
-            //act
-
-            //assert
-            Assert.AreEqual(testBaseKey, objectCache.AbstractObjectCacheBaseKey);
-        }
-
-        [Test]
-        public void Add_Null_To_Cache_Null_Object_Cache_Null_Reference_Exception_Thrown()
-        {
-            //assign
+            //assign 
             var objectCache = Substitute.For<AbstractObjectCache>();
             var cacheKey = Substitute.For<AbstractCacheKey>();
 
-            //act
-            Assert.Throws<NullReferenceException>(() => objectCache.Add(cacheKey, null));
-        }
-
-        
-        [Test]
-        public void Add_Object_To_Cache_Object_Has_Been_Added()
-        {
-            //assign
-            var objectCache = new StubAbstractObjectCache();
-            var cacheKey = BuildCacheKey("TestKey");
-            var objectToBeCached = new StubObject();
-
-            //act
-            objectCache.Add(cacheKey, objectToBeCached);
-
-            Assert.AreSame(objectToBeCached, objectCache.Cache["TestKey" + objectCache.AbstractObjectCacheBaseKey]);
+            //assert
+            Assert.IsFalse(objectCache.ContainCacheKey(cacheKey));
         }
 
         [Test]
-        public void Add_Two_Objects_To_Cache_With_Same_Key_Duplicated_Key_Exception_Thrown()
+        public void Add_Object_To_Cache_With_Cache_Key_Including_Group_Key_Cache_Contain_Group()
         {
-            //assign
-            var objectCache = new StubAbstractObjectCache();
-            var cacheKey = BuildCacheKey("TestKey");
-
-            var firstObjectToBeCached = new StubObject();
-            var secondObjectToBeCached = new StubObject();
-
-            //act
-            objectCache.Add(cacheKey, firstObjectToBeCached);
-
-            Assert.Throws<DuplicatedKeyException>(() => objectCache.Add(cacheKey, secondObjectToBeCached));
-        }
-
-        [Test]
-        public void Add_Object_To_Group_Cache_Null_As_Group_Cache_Key_Null_Reference_Exception_Thrown()
-        {
-            //assign
+            //assign 
             var objectCache = Substitute.For<AbstractObjectCache>();
-            var cacheKey = Substitute.For<AbstractCacheKey>();
-            var objectToBeCached = new StubObject();
-
-            objectCache.Add(cacheKey, objectToBeCached);
-
+            var groupIdentifier = "GroupIdentifier";
+            var uniqueIdentifier = "UniqueIdentifier";
+            var cacheKey = Substitute.For<AbstractCacheKey>(uniqueIdentifier, groupIdentifier);
+            var objectForCaching = new object();
+            
             //act
-            Assert.Throws<NullReferenceException>(() => objectCache.AddToGroup(null, "TESTKEY", objectToBeCached));
+            objectCache.Add(cacheKey, objectForCaching);
+
+            //assert
+            Assert.IsTrue(objectCache.ContainGroupKey(groupIdentifier));
         }
 
         [Test]
-        public void Add_Object_To_Group_Cache_Empty_String_As_Group_Cache_Key_Null_Reference_Exception_Thrown()
+        public void Object_Not_Added_To_Cache_With_Cache_Key_Including_Group_Cache_Does_Not_Contain_Group()
         {
-            //assign
+            //assign 
             var objectCache = Substitute.For<AbstractObjectCache>();
-            var cacheKey = "TestKey";
-            var objectToBeGrouped = new StubObject();
+            var groupIdentifier = "GroupIdentifier";
 
-            //act
-            Assert.Throws<NullReferenceException>(() => objectCache.AddToGroup(string.Empty, cacheKey, objectToBeGrouped));
+            //assert
+            Assert.IsFalse(objectCache.ContainGroupKey(groupIdentifier));
         }
+
 
         [Test]
-        public void Add_Object_To_Group_Cache_Null_As_Cache_Key_Null_Reference_Exception_Thrown()
+        public void Object_Not_Added_To_Cache_Get_Grouped_Cached_Keys_Returns_Empty_List()
         {
-            //assign
+            //assign 
             var objectCache = Substitute.For<AbstractObjectCache>();
-            var cacheKey = Substitute.For<AbstractCacheKey>();
-            var objectToBeCached = new StubObject();
+            var groupIdentifier = "GroupIdentifier";
 
-            objectCache.Add(cacheKey, objectToBeCached);
+            //assert
+            Assert.IsEmpty(objectCache.GetGroupedCacheKeys(groupIdentifier));
+        }
+
+
+        [Test]
+        public void Add_Object_To_Cache_With_Cache_Key_Including_Group_Key_Group_Contains_Cache_Key()
+        {
+            //assign 
+            var objectCache = Substitute.For<AbstractObjectCache>();
+            var groupIdentifier = "GroupIdentifier";
+            var uniqueIdentifier = "UniqueIdentifier";
+            var cacheKey = Substitute.For<AbstractCacheKey>(uniqueIdentifier, groupIdentifier);
+            var objectForCaching = new object();
 
             //act
-            Assert.Throws<NullReferenceException>(() => objectCache.AddToGroup("TestGroup", null, objectToBeCached));
+            objectCache.Add(cacheKey, objectForCaching);
+            var result = objectCache.GetGroupedCacheKeys(groupIdentifier);
+
+            //assert
+            Assert.IsTrue(result.Any(key => key.UniqueIdentifier == uniqueIdentifier));
         }
-
-
-        private static AbstractCacheKey BuildCacheKey(string key)
-        {
-            var cacheKey = Substitute.For<AbstractCacheKey>();
-            cacheKey.InternalGetKey().Returns(key);
-            return cacheKey;
-        }
-
-        private class StubAbstractObjectCache : AbstractObjectCache
-        {
-            public readonly Dictionary<string, object> Cache;
-
-            public StubAbstractObjectCache()
-            {
-                Cache = new Dictionary<string, object>();
-            }
-
-            protected override void InternalAdd(string key, object objectForCaching)
-            {
-                Cache.Add(key, objectForCaching);
-            }
-
-            protected override bool CheckKey(string key)
-            {
-                return Cache.Keys.Any(k => k == key);
-            }
-        }
-
-        private class StubObject
-        { }
     }
 }
