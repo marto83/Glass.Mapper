@@ -37,6 +37,10 @@ namespace Glass.Mapper.Caching
             
         }
 
+        protected AbstractCacheKey(string uniqueIdentifier) : this(uniqueIdentifier, string.Empty)
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AbstractCacheKey" /> class.
         /// </summary>

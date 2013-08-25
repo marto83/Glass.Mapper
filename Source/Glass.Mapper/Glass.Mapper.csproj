@@ -82,6 +82,7 @@
     <Compile Include="Caching\Exceptions\NullCacheKeyException.cs" />
     <Compile Include="Caching\Exceptions\NullGroupIdentifierException.cs" />
     <Compile Include="Caching\Exceptions\NullUniqueIdentifierException.cs" />
+    <Compile Include="Caching\GroupCacheKey.cs" />
     <Compile Include="Configuration\AbstractTypeConfiguration.cs" />
     <Compile Include="Configuration\AbstractPropertyConfiguration.cs" />
     <Compile Include="Configuration\Attributes\AttributeConfigurationLoader.cs" />

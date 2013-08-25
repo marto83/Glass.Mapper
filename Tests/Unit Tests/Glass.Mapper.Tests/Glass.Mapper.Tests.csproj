@@ -74,7 +74,7 @@
     <Compile Include="AbstractServiceFixture.cs" />
     <Compile Include="Caching\AbstractCacheKeyFixture.cs" />
     <Compile Include="Caching\AbstractObjectCacheFixture.cs" />
-    <Compile Include="Caching\GroupedCacheFixture.cs" />
+    <Compile Include="Caching\GroupCacheKeyFixture.cs" />
     <Compile Include="Configuration\AbstractTypeConfigurationFixture.cs" />
     <Compile Include="Configuration\Attributes\AttributeConfigurationLoaderFixture.cs" />
     <Compile Include="Configuration\Attributes\AbstractClassAttributeFixture.cs" />

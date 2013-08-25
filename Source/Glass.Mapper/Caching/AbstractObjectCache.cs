@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Glass.Mapper.Caching.Exceptions;
 
 namespace Glass.Mapper.Caching
@@ -9,16 +10,16 @@ namespace Glass.Mapper.Caching
     /// </summary>
     public abstract class AbstractObjectCache
     {
-        protected readonly List<AbstractCacheKey> CacheKeys;
-        protected readonly Dictionary<string, List<AbstractCacheKey>> Groups;
+        private readonly ReaderWriterLockSlim _cacheKeyLock = new ReaderWriterLockSlim();
+        protected List<AbstractCacheKey> CacheKeys { get; private set; }
+        protected Dictionary<string, List<AbstractCacheKey>> Groups { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AbstractObjectCache"/> class.
         /// </summary>
         protected AbstractObjectCache()
         {
-            CacheKeys= new List<AbstractCacheKey>();
-            Groups = new Dictionary<string, List<AbstractCacheKey>>();
+            InitialiseCache();
         }
 
         /// <summary>
@@ -29,12 +30,13 @@ namespace Glass.Mapper.Caching
         /// <exception cref="System.NotImplementedException"></exception>
         public void Add(AbstractCacheKey cacheKey, object objectForCaching)
         {
-            if (cacheKey == null)
-                throw new NullCacheKeyException();
-
+            CheckCacheKey(cacheKey);
+            
+            _cacheKeyLock.EnterWriteLock();
             CacheKeys.Add(cacheKey);
-
-            Groups.Add(cacheKey.GroupIdentifier, new List<AbstractCacheKey> {cacheKey});
+            _cacheKeyLock.ExitWriteLock();
+            
+            AddCacheKeyToGroup(cacheKey);
         }
 
         /// <summary>
@@ -44,7 +46,11 @@ namespace Glass.Mapper.Caching
         /// <returns></returns>
         public bool ContainCacheKey(AbstractCacheKey cacheKey)
         {
-            return CacheKeys.Any(x => x.Equals(cacheKey));
+            _cacheKeyLock.EnterReadLock();
+            var result = CacheKeys.Any(x => x.Equals(cacheKey));
+            _cacheKeyLock.ExitReadLock();
+
+            return result;
         }
 
         /// <summary>
@@ -69,6 +75,26 @@ namespace Glass.Mapper.Caching
                 return Groups[groupIdentifier];
             
             return new List<AbstractCacheKey>();
+        }
+
+        private static void CheckCacheKey(AbstractCacheKey cacheKey)
+        {
+            if (cacheKey == null)
+                throw new NullCacheKeyException();
+        }
+
+        private void AddCacheKeyToGroup(AbstractCacheKey cacheKey)
+        {
+            if (!ContainGroupKey(cacheKey.GroupIdentifier))
+                Groups.Add(cacheKey.GroupIdentifier, new List<AbstractCacheKey> {cacheKey});
+            else
+                Groups[cacheKey.GroupIdentifier].Add(cacheKey);
+        }
+
+        private void InitialiseCache()
+        {
+            CacheKeys = new List<AbstractCacheKey>();
+            Groups = new Dictionary<string, List<AbstractCacheKey>>();
         }
     }
 }

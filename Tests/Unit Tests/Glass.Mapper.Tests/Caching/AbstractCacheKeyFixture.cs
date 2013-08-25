@@ -1,5 +1,6 @@
 ﻿using Glass.Mapper.Caching;
 using Glass.Mapper.Caching.Exceptions;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Glass.Mapper.Tests.Caching
@@ -102,6 +103,16 @@ namespace Glass.Mapper.Tests.Caching
 
             //assert
             Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void New_Cache_Key_With_No_Group_Identifier_Default_Identifier_Used()
+        {
+            //assign
+            var cacheKey = Substitute.For<AbstractCacheKey>("TestUniqueIdentifier");
+
+            //assert
+            Assert.AreEqual(AbstractCacheKey.DefaultGroupIdentifier , cacheKey.GroupIdentifier);
         }
 
         private class StubAbstractCacheKey: AbstractCacheKey 

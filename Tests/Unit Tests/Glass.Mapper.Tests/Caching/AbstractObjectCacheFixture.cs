@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Glass.Mapper.Caching;
 using Glass.Mapper.Caching.Exceptions;
 using NSubstitute;
@@ -62,14 +64,12 @@ namespace Glass.Mapper.Tests.Caching
             Assert.IsFalse(_objectCache.ContainGroupKey(GroupIdentifier));
         }
 
-
         [Test]
         public void Object_Not_Added_To_Cache_Get_Grouped_Cached_Keys_Returns_Empty_List()
         {
             //assert
             Assert.IsEmpty(_objectCache.GetGroupedCacheKeys(GroupIdentifier));
         }
-
 
         [Test]
         public void Add_Object_To_Cache_With_Cache_Key_Including_Group_Key_Group_Contains_Cache_Key()
@@ -82,6 +82,57 @@ namespace Glass.Mapper.Tests.Caching
             Assert.IsTrue(result.Any(key => key.UniqueIdentifier == UniqueIdentifier));
         }
 
+        [Test]
+        public void Add_Object_To_Cache_With_Cache_Key_No_Group_Key_Default_Group_Key_Used()
+        {
+            //assign
+            var cacheKey = Substitute.For<AbstractCacheKey>(UniqueIdentifier);
+            _objectCache.Add(cacheKey, new object());
 
+            //act
+            var result = _objectCache.GetGroupedCacheKeys(AbstractCacheKey.DefaultGroupIdentifier);
+
+            //assert
+            Assert.IsTrue(result.Any());
+        }
+
+        [Test]
+        public void Add_Two_Objects_To_Cache_With_Same_Group_Key_GetGroupedCacheKeys_Returns_Both_Cache_Keys()
+        {
+            //assign
+            var uniqueIdentifierOne = "UniqueIdentifierOne";
+            var uniqueIdentifierTwo = "UniqueIdentifierTwo";
+            var cacheKeyOne = Substitute.For<AbstractCacheKey>(uniqueIdentifierOne, GroupIdentifier);
+            var cacheKeyTwo = Substitute.For<AbstractCacheKey>(uniqueIdentifierTwo, GroupIdentifier);
+
+            _objectCache.Add(cacheKeyOne, new object());
+            _objectCache.Add(cacheKeyTwo, new object());
+
+            //act
+            var result = _objectCache.GetGroupedCacheKeys(GroupIdentifier);
+
+            //assert
+            Assert.IsTrue(result.Any(key => key.UniqueIdentifier == uniqueIdentifierOne));
+            Assert.IsTrue(result.Any(key => key.UniqueIdentifier == uniqueIdentifierTwo));
+        }
+
+         [Test]
+        public void Add_Objects_To_Cache_And_Read_From_Cache_Cache_Thread_Safe()
+        {
+            //act
+            var key = Substitute.For<AbstractCacheKey>(UniqueIdentifier, GroupIdentifier);
+            _objectCache.Add(key, new object());
+
+            Parallel.For(0, 1000, i =>
+            {
+                var cacheKey = Substitute.For<AbstractCacheKey>(UniqueIdentifier + i, GroupIdentifier);
+
+                //act
+                _objectCache.Add(cacheKey, new object());
+
+                //assert
+                Assert.DoesNotThrow(() => _objectCache.ContainCacheKey(key));
+            });
+        }
     }
 }
