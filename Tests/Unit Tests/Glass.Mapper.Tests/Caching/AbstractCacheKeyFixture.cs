@@ -1,7 +1,5 @@
-﻿
-using Glass.Mapper.Caching;
+﻿using Glass.Mapper.Caching;
 using Glass.Mapper.Caching.Exceptions;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace Glass.Mapper.Tests.Caching
