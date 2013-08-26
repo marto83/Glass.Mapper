@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Glass.Mapper.Caching;
 using Glass.Mapper.Caching.Exceptions;
@@ -150,6 +150,52 @@ namespace Glass.Mapper.Tests.Caching
                 //assert
                 Assert.DoesNotThrow(() => _objectCache.IsGroupKeyContained(GroupIdentifier + i));
             });
+        }
+
+        [Test]
+        public void Add_Object_To_Cache_Object_Has_Been_Cached()
+        {
+            //assign
+            var stubObjectCache = new StubObjectCache();
+            var objectForCaching = new object();
+
+            //act
+            stubObjectCache.Add(_cacheKey, objectForCaching);
+
+            //assert
+            Assert.Contains(objectForCaching, stubObjectCache.CacheDictionary.Values);
+        }
+
+        [Test]
+        public void Add_Object_To_Cache_With_Same_Key()
+        {
+            //assign
+            var stubObjectCache = new StubObjectCache();
+            var objectForCachingOne = new object();
+            var objectForCachingTwo = new object();
+
+            //act
+            stubObjectCache.Add(_cacheKey, objectForCachingOne);
+            stubObjectCache.Add(_cacheKey, objectForCachingTwo);
+
+            //assert
+            Assert.Contains(objectForCachingOne, stubObjectCache.CacheDictionary.Values);
+            Assert.IsFalse(stubObjectCache.CacheDictionary.Values.Any(x => x == objectForCachingTwo));
+        }
+
+        public class StubObjectCache:AbstractObjectCache
+        {
+            public volatile Dictionary<string, object> CacheDictionary = new Dictionary<string,object>();
+
+            protected override void AddToCache(string cacheKey, object objectForCaching)
+            {
+               CacheDictionary.Add(cacheKey, objectForCaching);
+            }
+
+            protected override bool IsKeyUsedInCache(string cacheKey)
+            {
+                return CacheDictionary.ContainsKey(cacheKey);
+            }
         }
     }
 }

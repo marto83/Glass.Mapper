@@ -32,12 +32,16 @@ namespace Glass.Mapper.Caching
         public void Add(AbstractCacheKey cacheKey, object objectForCaching)
         {
             CheckCacheKey(cacheKey);
-            
-            _cacheKeyLock.EnterWriteLock();
-            CacheKeys.Add(cacheKey);
-            _cacheKeyLock.ExitWriteLock();
 
-            AddCacheKeyToGroup(cacheKey);
+            if (!IsKeyUsedInCache(cacheKey.UniqueIdentifier))
+            {
+                AddToCache(cacheKey.UniqueIdentifier, objectForCaching);
+                _cacheKeyLock.EnterWriteLock();
+                CacheKeys.Add(cacheKey);
+                _cacheKeyLock.ExitWriteLock();
+
+                AddCacheKeyToGroup(cacheKey);
+            }
         }
 
         /// <summary>
@@ -81,6 +85,20 @@ namespace Glass.Mapper.Caching
             
             return new List<AbstractCacheKey>();
         }
+
+        /// <summary>
+        /// Adds the automatic cache.
+        /// </summary>
+        /// <param name="cacheKey">The cache key.</param>
+        /// <param name="objectForCaching">The object for caching.</param>
+        /// <returns>Returns true if implantation seceded to added object to cache</returns>
+        protected abstract void AddToCache(string cacheKey, object objectForCaching);
+
+        /// <summary>
+        /// Checks the cache for key.
+        /// </summary>
+        /// <param name="cacheKey">The cache key.</param>
+        protected abstract bool IsKeyUsedInCache(string cacheKey);
 
         private static void CheckCacheKey(AbstractCacheKey cacheKey)
         {
