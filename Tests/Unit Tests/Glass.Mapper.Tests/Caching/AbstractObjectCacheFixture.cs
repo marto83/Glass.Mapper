@@ -1,5 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Glass.Mapper.Caching;
 using Glass.Mapper.Caching.Exceptions;
@@ -54,14 +54,14 @@ namespace Glass.Mapper.Tests.Caching
             _objectCache.Add(_cacheKey, new object());
 
             //assert
-            Assert.IsTrue(_objectCache.ContainGroupKey(GroupIdentifier));
+            Assert.IsTrue(_objectCache.IsGroupKeyContained(GroupIdentifier));
         }
 
         [Test]
         public void Object_Not_Added_To_Cache_With_Cache_Key_Including_Group_Cache_Does_Not_Contain_Group()
         {
             //assert
-            Assert.IsFalse(_objectCache.ContainGroupKey(GroupIdentifier));
+            Assert.IsFalse(_objectCache.IsGroupKeyContained(GroupIdentifier));
         }
 
         [Test]
@@ -116,7 +116,7 @@ namespace Glass.Mapper.Tests.Caching
             Assert.IsTrue(result.Any(key => key.UniqueIdentifier == uniqueIdentifierTwo));
         }
 
-         [Test]
+        [Test]
         public void Add_Objects_To_Cache_And_Read_From_Cache_Cache_Thread_Safe()
         {
             //act
@@ -125,6 +125,7 @@ namespace Glass.Mapper.Tests.Caching
 
             Parallel.For(0, 1000, i =>
             {
+                //assign
                 var cacheKey = Substitute.For<AbstractCacheKey>(UniqueIdentifier + i, GroupIdentifier);
 
                 //act
@@ -132,6 +133,22 @@ namespace Glass.Mapper.Tests.Caching
 
                 //assert
                 Assert.DoesNotThrow(() => _objectCache.ContainCacheKey(key));
+            });
+        }
+
+        [Test]
+        public void Add_Object_To_Cache_And_Read_From_Group_Thread_Safe()
+        {
+            Parallel.For(0, 1000, i =>
+            {
+                //assign
+                var cacheKey = Substitute.For<AbstractCacheKey>(UniqueIdentifier + i, GroupIdentifier + i);
+
+                //act
+                _objectCache.Add(cacheKey, new object());
+
+                //assert
+                Assert.DoesNotThrow(() => _objectCache.IsGroupKeyContained(GroupIdentifier + i));
             });
         }
     }

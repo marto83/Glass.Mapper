@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Glass.Mapper.Caching;
+﻿using Glass.Mapper.Caching;
 using Glass.Mapper.Caching.Exceptions;
 using NSubstitute;
 using NUnit.Framework;

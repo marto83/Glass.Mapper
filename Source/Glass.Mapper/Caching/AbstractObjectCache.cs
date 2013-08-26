@@ -11,8 +11,9 @@ namespace Glass.Mapper.Caching
     public abstract class AbstractObjectCache
     {
         private readonly ReaderWriterLockSlim _cacheKeyLock = new ReaderWriterLockSlim();
+
         protected List<AbstractCacheKey> CacheKeys { get; private set; }
-        protected Dictionary<string, List<AbstractCacheKey>> Groups { get; private set; }
+        protected Dictionary<GroupCacheKey, List<AbstractCacheKey>> Groups { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AbstractObjectCache"/> class.
@@ -35,7 +36,7 @@ namespace Glass.Mapper.Caching
             _cacheKeyLock.EnterWriteLock();
             CacheKeys.Add(cacheKey);
             _cacheKeyLock.ExitWriteLock();
-            
+
             AddCacheKeyToGroup(cacheKey);
         }
 
@@ -58,9 +59,12 @@ namespace Glass.Mapper.Caching
         /// </summary>
         /// <param name="groupIdentifier">The group identifier.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        public bool ContainGroupKey(string groupIdentifier)
+        public bool IsGroupKeyContained(string groupIdentifier)
         {
-            return Groups.Any(x => x.Key.Equals(groupIdentifier));
+            _cacheKeyLock.EnterReadLock();
+            var result = Groups.Any(x => x.Key.GroupIdentifier.Equals(groupIdentifier));
+            _cacheKeyLock.ExitReadLock();
+            return result;
         }
 
         /// <summary>
@@ -71,8 +75,9 @@ namespace Glass.Mapper.Caching
         /// <exception cref="System.NotImplementedException"></exception>
         public List<AbstractCacheKey> GetGroupedCacheKeys(string groupIdentifier)
         {
-            if (Groups.ContainsKey(groupIdentifier))
-                return Groups[groupIdentifier];
+            var group = Groups.Keys.SingleOrDefault(key => key.GroupIdentifier == groupIdentifier);
+            if (group != null)
+                return Groups[group];
             
             return new List<AbstractCacheKey>();
         }
@@ -85,16 +90,31 @@ namespace Glass.Mapper.Caching
 
         private void AddCacheKeyToGroup(AbstractCacheKey cacheKey)
         {
-            if (!ContainGroupKey(cacheKey.GroupIdentifier))
-                Groups.Add(cacheKey.GroupIdentifier, new List<AbstractCacheKey> {cacheKey});
-            else
-                Groups[cacheKey.GroupIdentifier].Add(cacheKey);
+            _cacheKeyLock.EnterReadLock();
+            var groupKey = Groups.SingleOrDefault(x => x.Key.GroupIdentifier.Equals(cacheKey.GroupIdentifier));
+            _cacheKeyLock.ExitReadLock();
+
+            var group = groupKey.Key;
+
+            if (group == null)
+            {
+                group = new GroupCacheKey(cacheKey);
+
+                _cacheKeyLock.EnterWriteLock();
+                Groups.Add(group, new List<AbstractCacheKey>());
+                _cacheKeyLock.ExitWriteLock();
+            }
+
+            group.GroupKeyLock.EnterWriteLock();
+            Groups[group].Add(cacheKey);
+            group.GroupKeyLock.ExitWriteLock();
+
         }
 
         private void InitialiseCache()
         {
             CacheKeys = new List<AbstractCacheKey>();
-            Groups = new Dictionary<string, List<AbstractCacheKey>>();
+            Groups = new Dictionary<GroupCacheKey, List<AbstractCacheKey>>();
         }
     }
 }

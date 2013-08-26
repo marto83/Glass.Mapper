@@ -1,4 +1,5 @@
-﻿using Glass.Mapper.Caching.Exceptions;
+﻿using System.Threading;
+using Glass.Mapper.Caching.Exceptions;
 
 namespace Glass.Mapper.Caching
 {
@@ -14,6 +15,11 @@ namespace Glass.Mapper.Caching
         /// The group identifier.
         /// </value>
         public string GroupIdentifier{ get; private set; }
+
+        /// <summary>
+        /// The group key lock
+        /// </summary>
+        public readonly ReaderWriterLockSlim GroupKeyLock = new ReaderWriterLockSlim();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupCacheKey"/> class.
