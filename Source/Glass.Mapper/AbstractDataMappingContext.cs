@@ -31,13 +31,7 @@ namespace Glass.Mapper
         {
             Object = obj;
         }
-
-        /// <summary>
-        /// Value stored by the CMS
-        /// </summary>
-        /// <value>The CMS value.</value>
-        public string CmsValue { get; set; }
-
+        
         /// <summary>
         /// Value stored by the Property
         /// </summary>

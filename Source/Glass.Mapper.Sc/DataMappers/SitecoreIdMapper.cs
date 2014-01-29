@@ -60,7 +60,6 @@ namespace Glass.Mapper.Sc.DataMappers
         ///                                                         scConfig.PropertyInfo.Name)</exception>
         public override object MapToProperty(AbstractDataMappingContext mappingContext)
         {
-
             SitecoreDataMappingContext context = (SitecoreDataMappingContext)mappingContext;
             var item = context.Item;
 
@@ -76,7 +75,6 @@ namespace Glass.Mapper.Sc.DataMappers
                                                     (scConfig.PropertyInfo.ReflectedType.FullName,
                                                         scConfig.PropertyInfo.Name));
             }
-
         }
 
 

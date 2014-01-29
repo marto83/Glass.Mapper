@@ -128,7 +128,8 @@ namespace Glass.Mapper.Sc.DataMappers
         public override object GetFieldValue(string fieldValue, SitecoreFieldConfiguration config, SitecoreDataMappingContext context)
         {
             throw new NotImplementedException();
-        }
+        }
+
     }
 }
 

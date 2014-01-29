@@ -16,7 +16,7 @@ namespace Glass.Mapper.Pipelines.ObjectConstruction.Tasks.CacheAdd
         {
             if (args.Result != null && args.Configuration.Cachable)
             {
-                var key = args.AbstractTypeCreationContext.GetUniqueKey();
+                var key = args.Context.Name+ args.AbstractTypeCreationContext.GetUniqueKey();
 
                 _cacheManager.Add(key, args.Result);
             }

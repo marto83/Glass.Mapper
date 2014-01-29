@@ -42,6 +42,7 @@ namespace Glass.Mapper.Sc
         {
             var revisionId = new Guid(Item["__Revision"]);
 
+           
             return Item.ID.ToString() + revisionId + RequestedType.FullName + IsLazy.ToString();
         }
 
