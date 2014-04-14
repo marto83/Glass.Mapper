@@ -250,9 +250,14 @@ namespace Glass.Mapper.Sc
                 attrs = Utilities.GetPropertiesCollection(parameters, true);
             }
 
+            
+
             if (IsInEditingMode && isEditable)
             {
-                return MakeEditable(field, null, model, "haschildren=true", _context, SitecoreContext.Database, writer);
+                attrs.Add("haschildren","true");
+
+
+                return MakeEditable(field, null, model, attrs, _context, SitecoreContext.Database, writer);
             }
             else
             {
