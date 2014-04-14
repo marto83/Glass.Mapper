@@ -419,10 +419,6 @@ namespace Glass.Mapper.Sc.CastleWindsor
         /// <param name="store">The configuration store.</param>
         public virtual void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            //dynamic must be first
-            container.Register(
-                Component.For<ICacheManager>().ImplementedBy<InMemoryCache>().LifestyleSingleton()
-                );
 
             //dynamic must be first
             container.Register(
@@ -430,9 +426,6 @@ namespace Glass.Mapper.Sc.CastleWindsor
                 );
 
 
-            container.Register(
-             Component.For<IObjectConstructionTask>().ImplementedBy<CacheCheckTask>().LifestyleTransient()
-             );
 
             container.Register(
                 Component.For<IObjectConstructionTask>().ImplementedBy<SitecoreItemTask>().LifestyleTransient()
@@ -452,9 +445,6 @@ namespace Glass.Mapper.Sc.CastleWindsor
                 Component.For<IObjectConstructionTask>().ImplementedBy<CreateInterfaceTask>().LifestyleTransient()
                 );
 
-            container.Register(
-                Component.For<IObjectConstructionTask>().ImplementedBy<CacheAddTask>().LifestyleTransient()
-                );
         }
     }
 
