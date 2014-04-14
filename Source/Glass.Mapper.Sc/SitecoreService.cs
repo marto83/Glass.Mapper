@@ -42,6 +42,7 @@ namespace Glass.Mapper.Sc
     /// </summary>
     public class SitecoreService : AbstractService, ISitecoreService
     {
+        public Config Config { get; set; }
 
         /// <summary>
         /// Gets the database.
@@ -93,6 +94,13 @@ namespace Glass.Mapper.Sc
             Database = database;
         }
 
+        public override void Initiate(IDependencyResolver resolver)
+        {
+            Config = resolver.Resolve<Config>();
+            base.Initiate(resolver);
+        }
+
+
         #region AddVersion
 
         /// <summary>
@@ -106,7 +114,7 @@ namespace Glass.Mapper.Sc
         public T AddVersion<T>(T target) where T : class
         {
             //TODO: ME - this may not work with a proxy
-            var config = GlassContext.GetTypeConfiguration(target) as SitecoreTypeConfiguration;
+            var config = GlassContext.GetTypeConfiguration<SitecoreTypeConfiguration>(target) ;
 
             if (config == null)
                 throw new NullReferenceException("Can not add version, could not find configuration for {0}".Formatted(typeof(T).FullName));
@@ -157,12 +165,9 @@ namespace Glass.Mapper.Sc
             SitecoreTypeConfiguration newType;
             try
             {
-                newType = GlassContext.GetTypeConfiguration(newItem) as SitecoreTypeConfiguration;
-                if (newType == null)
-                {
-                    GlassContext.Load(new OnDemandLoader<SitecoreTypeConfiguration>(typeof(T)));
-                    newType = GlassContext.GetTypeConfiguration(newItem) as SitecoreTypeConfiguration;
-                }
+                 
+              newType = GlassContext.GetTypeConfiguration<SitecoreTypeConfiguration>(newItem);
+               
             }
             catch (Exception ex)
             {
@@ -173,7 +178,7 @@ namespace Glass.Mapper.Sc
             SitecoreTypeConfiguration parentType;
             try
             {
-                parentType = GlassContext.GetTypeConfiguration(parent) as SitecoreTypeConfiguration;
+                parentType = GlassContext.GetTypeConfiguration<SitecoreTypeConfiguration>(parent);
             }
             catch (Exception ex)
             {
@@ -263,7 +268,7 @@ namespace Glass.Mapper.Sc
             SitecoreTypeConfiguration newType;
             try
             {
-                newType = GlassContext.GetTypeConfiguration(typeof(T)) as SitecoreTypeConfiguration;
+                newType = GlassContext.GetTypeConfiguration<SitecoreTypeConfiguration>(typeof(T)) ;
             }
             catch (Exception ex)
             {
@@ -274,7 +279,7 @@ namespace Glass.Mapper.Sc
             SitecoreTypeConfiguration parentType;
             try
             {
-                parentType = GlassContext.GetTypeConfiguration(parent) as SitecoreTypeConfiguration;
+                parentType = GlassContext.GetTypeConfiguration<SitecoreTypeConfiguration>(parent);
             }
             catch (Exception ex)
             {
@@ -418,11 +423,19 @@ namespace Glass.Mapper.Sc
         }
 
 
+        private bool DoVersionCheck()
+        {
+            if (Config != null && Config.ForceItemInPageEditor && GlassHtml.IsInEditingMode)
+                return false;
 
+
+            return Switcher<VersionCountState>.CurrentValue != VersionCountState.Disabled;
+
+        }
 
         public object CreateType(Type type, Item item, bool isLazy, bool inferType, Dictionary<string, object> parameters, params object[] constructorParameters)
         {
-            if (item == null || (item.Versions.Count == 0 && Switcher<VersionCountState>.CurrentValue != VersionCountState.Disabled)) return null;
+            if (item == null || (item.Versions.Count == 0 && DoVersionCheck())) return null;
 
 
             if (constructorParameters != null && constructorParameters.Length > 4)
@@ -472,7 +485,7 @@ namespace Glass.Mapper.Sc
         public void Delete<T>(T item) where T : class
         {
 
-            var type = GlassContext.GetTypeConfiguration(item) as SitecoreTypeConfiguration;
+            var type = GlassContext.GetTypeConfiguration<SitecoreTypeConfiguration>(item);
 
             Item scItem = type.ResolveItem(item, Database);
 
@@ -1312,8 +1325,8 @@ namespace Glass.Mapper.Sc
         /// <param name="newParent">The new parent.</param>
         public void Move<T, TK>(T item, TK newParent)
         {
-            var itemType = GlassContext.GetTypeConfiguration(item) as SitecoreTypeConfiguration;
-            var parentType = GlassContext.GetTypeConfiguration(newParent) as SitecoreTypeConfiguration;
+            var itemType = GlassContext.GetTypeConfiguration<SitecoreTypeConfiguration>(item);
+            var parentType = GlassContext.GetTypeConfiguration<SitecoreTypeConfiguration>(newParent);
 
             Item scItem = itemType.ResolveItem(item, Database);
             Item scNewParent = parentType.ResolveItem(newParent, Database);
@@ -1395,7 +1408,7 @@ namespace Glass.Mapper.Sc
             //  SitecoreTypeContext context = new SitecoreTypeContext();
 
             //TODO: ME - this may not work with a proxy
-            var config = GlassContext.GetTypeConfiguration(target) as SitecoreTypeConfiguration;
+            var config = GlassContext.GetTypeConfiguration<SitecoreTypeConfiguration>(target);
 
             if (config == null)
                 throw new NullReferenceException("Can not save class, could not find configuration for {0}".Formatted(typeof(T).FullName));
@@ -1422,7 +1435,7 @@ namespace Glass.Mapper.Sc
         /// <param name="item">The item.</param>
         public void WriteToItem<T>(T target, Item item, bool updateStatistics = true, bool silent = false)
         {
-            var config = GlassContext.GetTypeConfiguration(target) as SitecoreTypeConfiguration;
+            var config = GlassContext.GetTypeConfiguration<SitecoreTypeConfiguration>(target);
 
             SitecoreTypeSavingContext savingContext = new SitecoreTypeSavingContext();
             savingContext.Config = config;
@@ -1446,7 +1459,7 @@ namespace Glass.Mapper.Sc
 
         public void Map<T>(T target)
         {
-            var config = GlassContext.GetTypeConfiguration(target) as SitecoreTypeConfiguration;
+            var config = GlassContext.GetTypeConfiguration<SitecoreTypeConfiguration>(target);
 
             if(config == null)
                 throw new MapperException("No configuration for type {0}. Load configuration using Attribute or Fluent configuration.".Formatted(typeof(T).Name));
@@ -1474,8 +1487,8 @@ namespace Glass.Mapper.Sc
 
         public Item ResolveItem(object target)
         {
-            var config = GlassContext.GetTypeConfiguration(target) as SitecoreTypeConfiguration;
-
+            var config = GlassContext.GetTypeConfiguration<SitecoreTypeConfiguration>(target);
+            
             if (config == null)
             {
                 return null;

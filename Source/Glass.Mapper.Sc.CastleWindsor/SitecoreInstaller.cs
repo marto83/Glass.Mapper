@@ -120,6 +120,8 @@ namespace Glass.Mapper.Sc.CastleWindsor
         {
             Config = config;
 
+
+
             DataMapperInstaller = new DataMapperInstaller(config);
             QueryParameterInstaller = new QueryParameterInstaller(config);
             DataMapperTaskInstaller = new DataMapperTaskInstaller(config);
@@ -144,6 +146,10 @@ namespace Glass.Mapper.Sc.CastleWindsor
                 ConfigurationResolverTaskInstaller,
                 ObjectionConstructionTaskInstaller,
                 ObjectSavingTaskInstaller
+                );
+
+            container.Register(
+                Component.For<Glass.Mapper.Sc.Config>().Instance(Config)
                 );
         }
     }

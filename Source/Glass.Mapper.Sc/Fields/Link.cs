@@ -1,4 +1,4 @@
-/*
+    /*
    Copyright 2012 Michael Edwards
  
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +26,7 @@ namespace Glass.Mapper.Sc.Fields
     /// <summary>
     /// Class Link
     /// </summary>
+    [Serializable]
     public class Link
     {
         /// <summary>
