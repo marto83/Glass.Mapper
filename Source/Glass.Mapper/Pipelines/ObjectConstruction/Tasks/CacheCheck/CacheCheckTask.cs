@@ -11,24 +11,11 @@ namespace Glass.Mapper.Pipelines.ObjectConstruction.Tasks.CacheCheck
             _cacheManager = cacheManager;
         }
 
-   
-        public void Execute(ObjectConstructionArgs args)
-        {
-            if (args.Result == null && args.Configuration.Cachable)
-            {
-                var key = args.AbstractTypeCreationContext.GetUniqueKey();
-   
         public void Execute(ObjectConstructionArgs args)
         {
             if (args.Result == null && args.Configuration.Cachable)
             {
                 var key = args.Context.Name + args.AbstractTypeCreationContext.GetUniqueKey();
-
-	    public void Execute(ObjectConstructionArgs args)
-	    {
-		    if (args.Result == null && args.Configuration.Cachable)
-		    {
-			    var key = args.AbstractTypeCreationContext.GetUniqueKey();
 				
 			    var cacheItem = _cacheManager.Get<object>(key);
 			    if (cacheItem != null)
