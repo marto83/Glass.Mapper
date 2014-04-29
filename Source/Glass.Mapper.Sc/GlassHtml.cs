@@ -581,12 +581,12 @@ namespace Glass.Mapper.Sc
                         var type = field.Body.Type;
                         object target = (field.Compile().Invoke(model) ?? string.Empty);
 
-                        if (type == ImageType)
+                        if (target is Image)
                         {
                             var image = target as Image;
                             firstPart  = RenderImage(image, WebUtil.ParseUrlParameters(parametersString));
                         }
-                        else if (type == LinkType)
+                        else if (target is Link)
                         {
                             var link = target as Link;
                             var sb = new StringBuilder();

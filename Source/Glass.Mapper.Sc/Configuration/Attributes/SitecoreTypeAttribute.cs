@@ -64,6 +64,8 @@ namespace Glass.Mapper.Sc.Configuration.Attributes
         /// <value>The name of the template.</value>
         public string TemplateName { get; set; }
 
+
+
         /// <summary>
         /// Configures the specified type.
         /// </summary>
