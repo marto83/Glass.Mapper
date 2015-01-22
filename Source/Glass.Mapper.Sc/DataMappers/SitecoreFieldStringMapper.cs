@@ -61,31 +61,34 @@ namespace Glass.Mapper.Sc.DataMappers
             if (config.Setting == SitecoreFieldSettings.RichTextRaw)
                 return field.Value;
 
-            if (_notRichTextSet.Contains(field.ID.Guid))
+            lock (_notRichTextSet)
             {
-                return field.Value;
+                if (_notRichTextSet.Contains(field.ID.Guid))
+                {
+                    return field.Value;
+                }
+
+                if (field.TypeKey == _richTextKey)
+                {
+                    RenderFieldArgs renderFieldArgs = new RenderFieldArgs();
+                    renderFieldArgs.Item = field.Item;
+                    renderFieldArgs.FieldName = field.Name;
+                    renderFieldArgs.DisableWebEdit = true;
+                    CorePipeline.Run("renderField", renderFieldArgs);
+
+                    return renderFieldArgs.Result.FirstPart + renderFieldArgs.Result.LastPart;
+
+                    //FieldRenderer renderer = new FieldRenderer();
+                    //renderer.Item = field.Item;
+                    //renderer.FieldName = field.Name;
+                    //renderer.Parameters = string.Empty;
+                    //renderer.DisableWebEditing = true;
+                    //return renderer.Render();
+                }
+
+                _notRichTextSet.Add(field.ID.Guid);
+
             }
-
-            if (field.TypeKey == _richTextKey)
-            {
-                RenderFieldArgs renderFieldArgs = new RenderFieldArgs();
-                renderFieldArgs.Item = field.Item;
-                renderFieldArgs.FieldName = field.Name;
-                renderFieldArgs.DisableWebEdit = true;
-                CorePipeline.Run("renderField", renderFieldArgs);
-
-                return renderFieldArgs.Result.FirstPart+renderFieldArgs.Result.LastPart;
-
-                //FieldRenderer renderer = new FieldRenderer();
-                //renderer.Item = field.Item;
-                //renderer.FieldName = field.Name;
-                //renderer.Parameters = string.Empty;
-                //renderer.DisableWebEditing = true;
-                //return renderer.Render();
-            }
-
-            _notRichTextSet.Add(field.ID.Guid);
-
             return field.Value;
         }
 
