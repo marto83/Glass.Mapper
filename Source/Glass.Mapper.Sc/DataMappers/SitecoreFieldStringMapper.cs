@@ -67,9 +67,10 @@ namespace Glass.Mapper.Sc.DataMappers
                 {
                     return field.Value;
                 }
+            }
 
-                if (field.TypeKey == _richTextKey)
-                {
+            if (field.TypeKey == _richTextKey)
+            {
                     RenderFieldArgs renderFieldArgs = new RenderFieldArgs();
                     renderFieldArgs.Item = field.Item;
                     renderFieldArgs.FieldName = field.Name;
@@ -84,11 +85,13 @@ namespace Glass.Mapper.Sc.DataMappers
                     //renderer.Parameters = string.Empty;
                     //renderer.DisableWebEditing = true;
                     //return renderer.Render();
-                }
-
-                _notRichTextSet.Add(field.ID.Guid);
-
             }
+
+            lock (_notRichTextSet)
+            {
+                _notRichTextSet.Add(field.ID.Guid);
+            }
+
             return field.Value;
         }
 
